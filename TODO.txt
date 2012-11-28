@@ -1,0 +1,5 @@
+- a list of games to choose from, and a parameter of the current game chosen that gets saved in the xml file.
+- Icon
+- AboutBox (with credits for Livestreamer team)
+- put on GitHub
+- a link opening the livestream in the browser to support the streamers
