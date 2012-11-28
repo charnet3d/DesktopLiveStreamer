@@ -23,5 +23,5 @@ Installing:
 Bug and Error reporting
 -----------------------
 
-If you ever fight a bug or a an unexpected behavior please submit a new issue at this page:
+If you ever find a bug or an unexpected behavior please submit a new issue at this page:
 https://github.com/charnet3d/DesktopLiveStreamer/issues
