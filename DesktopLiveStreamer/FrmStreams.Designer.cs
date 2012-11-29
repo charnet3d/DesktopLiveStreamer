@@ -53,6 +53,7 @@
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.btnChangeVLC = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnOpenBrowser = new System.Windows.Forms.Button();
             this.imgCmbLiveStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.imgCmbStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.groupBox1.SuspendLayout();
@@ -74,9 +75,9 @@
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(292, 200);
+            this.btnPlay.Location = new System.Drawing.Point(406, 200);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(143, 54);
+            this.btnPlay.Size = new System.Drawing.Size(98, 54);
             this.btnPlay.TabIndex = 3;
             this.btnPlay.Text = "Play";
             this.btnPlay.UseVisualStyleBackColor = true;
@@ -84,9 +85,9 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(465, 200);
+            this.btnStop.Location = new System.Drawing.Point(510, 200);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(143, 54);
+            this.btnStop.Size = new System.Drawing.Size(98, 54);
             this.btnStop.TabIndex = 4;
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -310,6 +311,16 @@
             this.btnChangeVLC.UseVisualStyleBackColor = true;
             this.btnChangeVLC.Click += new System.EventHandler(this.btnChangeVLC_Click);
             // 
+            // btnOpenBrowser
+            // 
+            this.btnOpenBrowser.Location = new System.Drawing.Point(302, 200);
+            this.btnOpenBrowser.Name = "btnOpenBrowser";
+            this.btnOpenBrowser.Size = new System.Drawing.Size(98, 54);
+            this.btnOpenBrowser.TabIndex = 14;
+            this.btnOpenBrowser.Text = "Open in Browser";
+            this.btnOpenBrowser.UseVisualStyleBackColor = true;
+            this.btnOpenBrowser.Click += new System.EventHandler(this.btnOpenBrowser_Click);
+            // 
             // imgCmbLiveStreams
             // 
             this.imgCmbLiveStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
@@ -337,6 +348,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 287);
+            this.Controls.Add(this.btnOpenBrowser);
             this.Controls.Add(this.btnChangeVLC);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
@@ -387,6 +399,7 @@
         private System.Windows.Forms.ProgressBar progressQuality;
         private System.Windows.Forms.ProgressBar progressLiveStreams;
         private System.Windows.Forms.ProgressBar progressFavorites;
+        private System.Windows.Forms.Button btnOpenBrowser;
     }
 }
 

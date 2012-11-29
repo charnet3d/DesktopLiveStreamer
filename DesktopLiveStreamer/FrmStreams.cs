@@ -80,13 +80,13 @@ namespace DesktopLiveStreamer
 
             playing = false;
             btnStop.Enabled = false;
+            btnPlay.Enabled = false;
+            btnOpenBrowser.Enabled = false;
 
             radioList2.Checked = true;
 
             groupFavorites.Enabled = false;
-
             groupLive.Enabled = true;
-            btnPlay.Enabled = false;
 
             cmbQualities.Enabled = false;
             btnAddLiveStream.Enabled = false;
@@ -234,19 +234,30 @@ namespace DesktopLiveStreamer
             if (radioList1.Checked)
             {
                 groupFavorites.Enabled = true;
-                btnPlay.Enabled = true;
-
                 groupLive.Enabled = false;
+
+                btnPlay.Enabled = true;
+                btnOpenBrowser.Enabled = true;
             }
             else if (radioList2.Checked)
             {
                 groupFavorites.Enabled = false;
-
                 groupLive.Enabled = true;
-                if (imgCmbLiveStreams.Items.Count > 0 && !updatingQualities)
-                    btnPlay.Enabled = true;
+
+                if (imgCmbLiveStreams.Items.Count > 0)
+                {
+                    if (updatingQualities)
+                        btnPlay.Enabled = false;
+                    else
+                        btnPlay.Enabled = true;
+
+                    btnOpenBrowser.Enabled = true;
+                }
                 else
+                {
                     btnPlay.Enabled = false;
+                    btnOpenBrowser.Enabled = false;
+                }
             }
         }
 
@@ -340,8 +351,6 @@ namespace DesktopLiveStreamer
                     {
                         statusLabel.Text = "Updating stream lists from Twitch.tv...";
                         statusLabel.ForeColor = Color.Brown;
-
-                        progressLiveStreams.Visible = true;
                     }));
 
                 if (progressLiveStreams.InvokeRequired)
@@ -400,13 +409,10 @@ namespace DesktopLiveStreamer
                         toolTip1.SetToolTip(progressLiveStreams, "Updating stream lists from Own3D.tv...");
                         progressLiveStreams.Visible = true;
                     }));
-                Console.WriteLine("1");
 
                 url = "http://api.own3d.tv/rest/live/list.json?gameid=163";
                 request = WebRequest.Create(url);
                 ws = request.GetResponse();
-
-                Console.WriteLine("2");
 
                 responseString = "";
                 using (System.IO.Stream stream = ws.GetResponseStream())
@@ -414,8 +420,6 @@ namespace DesktopLiveStreamer
                     StreamReader reader = new StreamReader(stream, Encoding.UTF8);
                     responseString = reader.ReadToEnd();
                 }
-
-                Console.WriteLine("3");
 
                 JArray own3dStreams = JArray.Parse(responseString);
 
@@ -426,8 +430,6 @@ namespace DesktopLiveStreamer
                                                     long.Parse(own3dStreams[i]["live_viewers"].ToString()), "Own3D",
                                                     (String)own3dStreams[i]["live_id"]));
                 }
-
-                Console.WriteLine("4");
 
                 listLiveStreams.sortByViewers();
 
@@ -535,6 +537,9 @@ namespace DesktopLiveStreamer
 
                 if (btnPlay.InvokeRequired)
                     btnPlay.Invoke(new MethodInvoker(delegate { btnPlay.Enabled = true; }));
+
+                if (btnOpenBrowser.InvokeRequired)
+                    btnOpenBrowser.Invoke(new MethodInvoker(delegate { btnOpenBrowser.Enabled = true; }));
 
                 if (progressLiveStreams.InvokeRequired)
                     progressLiveStreams.Invoke(new MethodInvoker(delegate { progressLiveStreams.Visible = false; }));
@@ -997,6 +1002,20 @@ namespace DesktopLiveStreamer
                 btnModify.Enabled = true;
                 btnDelete.Enabled = true;
                 btnClone.Enabled = true;
+            }
+        }
+
+        private void btnOpenBrowser_Click(object sender, EventArgs e)
+        {
+            if (radioList1.Checked)
+            {
+                if (imgCmbStreams.Items.Count > 0)
+                    Process.Start(listFavoriteStreams[imgCmbStreams.SelectedIndex].StreamUrl);
+            }
+            else
+            {
+                if (imgCmbLiveStreams.Items.Count > 0)
+                    Process.Start(listLiveStreams[imgCmbLiveStreams.SelectedIndex].StreamUrl);
             }
         }
     }

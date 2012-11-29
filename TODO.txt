@@ -2,4 +2,4 @@
 - Icon
 - AboutBox (with credits for Livestreamer team)
 + put on GitHub
-- a link opening the livestream in the browser to support the streamers
++ a link opening the livestream in the browser to support the streamers
