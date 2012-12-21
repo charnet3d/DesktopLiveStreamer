@@ -79,7 +79,8 @@ namespace DesktopLiveStreamer
             }
             finally
             {
-                xr.Close();
+                if (xr != null)
+                    xr.Close();
             }
         }
 
@@ -121,7 +122,8 @@ namespace DesktopLiveStreamer
             }
             finally
             {
-                xw.Close();
+                if (xw != null)
+                    xw.Close();
             }
         }
 
@@ -184,7 +186,8 @@ namespace DesktopLiveStreamer
             }
             finally
             {
-                xr.Close();
+                if (xr != null)
+                    xr.Close();
             }
         }
 
@@ -225,7 +228,8 @@ namespace DesktopLiveStreamer
             }
             finally
             {
-                xw.Close();
+                if (xw != null)
+                    xw.Close();
             }
         }
     }

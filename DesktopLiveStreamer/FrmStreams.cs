@@ -50,13 +50,27 @@ namespace DesktopLiveStreamer
 
             XMLPersist.StreamXMLFile = "streamlist.xml";
             XMLPersist.GameXMLFile = "gamelist.xml";
+
             try
             {
                 XMLPersist.loadStreamListConfig(listFavoriteStreams);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // critical problem, the file needs to exist
+                MessageBox.Show(this, "Error: Unable to load configuration file 'streamlist.xml'. Check if it " + 
+                            "exists in the directory of the application and is readable.",
+                            "Configuration file not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            try
+            {
+                
                 XMLPersist.loadGameListConfig(listGames);
             }
             catch (FileNotFoundException)
             {
+                // Not very serious, the config file will be created later
                 Console.WriteLine("An XML configuration file wasn't found");
             }
 
@@ -68,7 +82,16 @@ namespace DesktopLiveStreamer
                 if (path != null && File.Exists(path))
                 {
                     XMLPersist.VLCExecutable = "\\\"" + path + "\\\" --file-caching=5000"; ;
-                    XMLPersist.saveStreamListConfig(listFavoriteStreams);
+                    try
+                    {
+                        XMLPersist.saveStreamListConfig(listFavoriteStreams);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " + 
+                                    "permissions on the directory of the application.\n" + 
+                                    "Desktop Live Streamer may require administrative rights on some systems.","Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
@@ -169,7 +192,7 @@ namespace DesktopLiveStreamer
             }
         }
 
-
+        // Deprecated
         private void btnChangeStreamer_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -237,7 +260,16 @@ namespace DesktopLiveStreamer
                 listFavoriteStreams.remove(imgCmbStreams.SelectedIndex);
                 listFavoriteStreams.sort();
 
-                XMLPersist.saveStreamListConfig(listFavoriteStreams);
+                try
+                {
+                    XMLPersist.saveStreamListConfig(listFavoriteStreams);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " + 
+                                "permissions on the directory of the application.\n" + 
+                                "Desktop Live Streamer may require administrative rights on some systems.","Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 updateComboStreams();
             }
@@ -338,6 +370,9 @@ namespace DesktopLiveStreamer
 
             if (updateLiveStreamsThread != null)
                 updateLiveStreamsThread.Abort();
+
+            if (updateGamesThread != null)
+                updateGamesThread.Abort();
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
@@ -356,7 +391,16 @@ namespace DesktopLiveStreamer
             {
                 XMLPersist.VLCExecutable = "\\\"" + ofd.FileName + "\\\" --file-caching=5000";
 
-                XMLPersist.saveStreamListConfig(listFavoriteStreams);
+                try
+                {
+                    XMLPersist.saveStreamListConfig(listFavoriteStreams);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " +
+                                "permissions on the directory of the application.\n" +
+                                "Desktop Live Streamer may require administrative rights on some systems.", "Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -1458,7 +1502,17 @@ namespace DesktopLiveStreamer
                 currentGameChanged = false;
 
             XMLPersist.DefaultGame = listGames[imgCmbGames.SelectedIndex].Caption;
-            XMLPersist.saveGameListConfig(listGames);
+
+            try
+            {
+                XMLPersist.saveGameListConfig(listGames);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " + 
+                            "permissions on the directory of the application.\n" + 
+                            "Desktop Live Streamer may require administrative rights on some systems.","Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             imgCmbGames.Enabled = false;
             btnUpdateGames.Enabled = false;

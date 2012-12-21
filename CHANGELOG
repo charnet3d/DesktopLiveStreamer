@@ -7,13 +7,18 @@ Features:
 
 - added a button to open a stream in default browser
 
-- added the possibility to choose the game you want to watch from a list of games, the list of games and the selected game get saved to avoiding the need to load the list and choose a game at every startup of the application.
+- added the possibility to choose the game you want to watch from a list of games, the list of games and the selected game get saved to avoid the need to load the list and choose a game at every startup of the application.
 
 - added about box, giving credit to the maker of livestreamer
 
 
 Fixes:
 - corrected exceptions happening when stream lists become empty
+
+- added error messages when write permissions or administrative rights are required while writing config files.
+  Also added an error message for when the config file streamlist.xml is not found.
+  
+- Abortion of the thread of game list loading when exiting the application.
 
 
 Version 0.8.2
