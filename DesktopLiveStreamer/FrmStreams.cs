@@ -43,7 +43,11 @@ namespace DesktopLiveStreamer
         public FrmStreams()
         {
             InitializeComponent();
+        }
 
+
+        private void FrmStreams_Load(object sender, EventArgs e)
+        {
             listGames = new ListGames();
             listFavoriteStreams = new ListStreams();
             listLiveStreams = new ListStreams();
@@ -55,17 +59,19 @@ namespace DesktopLiveStreamer
             {
                 XMLPersist.loadStreamListConfig(listFavoriteStreams);
             }
-            catch (UnauthorizedAccessException)
+            catch (FileNotFoundException)
             {
                 // critical problem, the file needs to exist
-                MessageBox.Show(this, "Error: Unable to load configuration file 'streamlist.xml'. Check if it " + 
+                MessageBox.Show(this, "Error: Unable to load configuration file 'streamlist.xml'. Check if it " +
                             "exists in the directory of the application and is readable.",
                             "Configuration file not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                this.Close();
             }
 
             try
             {
-                
+
                 XMLPersist.loadGameListConfig(listGames);
             }
             catch (FileNotFoundException)
@@ -75,7 +81,7 @@ namespace DesktopLiveStreamer
             }
 
             // Check if VLC executable is found
-            if (!File.Exists(XMLPersist.VLCExecutable.Replace("\\\" --file-caching=5000", "").Replace("\\\"", "")))
+            if (XMLPersist.VLCExecutable != null && !File.Exists(XMLPersist.VLCExecutable.Replace("\\\" --file-caching=5000", "").Replace("\\\"", "")))
             {
                 // Try to get VLC directory from registry
                 String path = ReadVLCExecutable();
@@ -88,16 +94,16 @@ namespace DesktopLiveStreamer
                     }
                     catch (UnauthorizedAccessException)
                     {
-                        MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " + 
-                                    "permissions on the directory of the application.\n" + 
-                                    "Desktop Live Streamer may require administrative rights on some systems.","Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " +
+                                    "permissions on the directory of the application.\n" +
+                                    "Desktop Live Streamer may require administrative rights on some systems.", "Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    DialogResult r = MessageBox.Show(this, 
-                        "VLC player doesn't appear to be installed or has been put in a different directory. Would you like to specify its path now ?", 
-                        "VLC Player not found", 
+                    DialogResult r = MessageBox.Show(this,
+                        "VLC player doesn't appear to be installed or has been put in a different directory. Would you like to specify its path now ?",
+                        "VLC Player not found",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                     if (r == DialogResult.Yes)
                         btnChangeVLC_Click(this, EventArgs.Empty);
@@ -106,11 +112,11 @@ namespace DesktopLiveStreamer
 
 
             // Check if LiveStreamer executable is found
-            if (!File.Exists(XMLPersist.LiveStreamerExecutable))
+            if (XMLPersist.LiveStreamerExecutable != null && !File.Exists(XMLPersist.LiveStreamerExecutable))
             {
                 DialogResult r = MessageBox.Show(this,
-                    "LiveStreamer doesn't appear to be installed or has been put in a different directory. Would you like to specify its path now ?", 
-                    "LiveStreamer not found", 
+                    "LiveStreamer doesn't appear to be installed or has been put in a different directory. Would you like to specify its path now ?",
+                    "LiveStreamer not found",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (r == DialogResult.Yes)
                     btnChangeStreamer_Click(this, EventArgs.Empty);

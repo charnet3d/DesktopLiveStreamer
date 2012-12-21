@@ -593,6 +593,7 @@
             this.Name = "FrmStreams";
             this.Text = "Desktop Live Streamer";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmStreams_FormClosed);
+            this.Load += new System.EventHandler(this.FrmStreams_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupLive.ResumeLayout(false);

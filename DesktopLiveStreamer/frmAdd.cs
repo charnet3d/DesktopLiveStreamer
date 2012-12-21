@@ -54,7 +54,17 @@ namespace DesktopLiveStreamer
                 listStreams.add(new Stream(txtCaption.Text, txtURL.Text, txtQuality.Text));
                 listStreams.sort();
 
-                XMLPersist.saveStreamListConfig(listStreams);
+                try
+                {
+                    XMLPersist.saveStreamListConfig(listStreams);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " +
+                                "permissions on the directory of the application.\n" +
+                                "Desktop Live Streamer may require administrative rights on some systems.", "Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -74,7 +84,16 @@ namespace DesktopLiveStreamer
                 listStreams[modifyIndex].Quality = txtQuality.Text;
                 listStreams.sort();
 
-                XMLPersist.saveStreamListConfig(listStreams);
+                try
+                {
+                    XMLPersist.saveStreamListConfig(listStreams);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " +
+                                "permissions on the directory of the application.\n" +
+                                "Desktop Live Streamer may require administrative rights on some systems.", "Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
