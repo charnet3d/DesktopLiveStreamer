@@ -18,18 +18,25 @@ namespace DesktopLiveStreamer
 {
     public partial class FrmStreams : Form
     {
+        private ListGames listGames;
         private ListStreams listFavoriteStreams;
         private ListStreams listLiveStreams;
 
         private Boolean playing;
+        private Boolean updatingGames;
         private Boolean updatingLiveStreams;
         private Boolean updatingQualities;
         private Boolean checkingFavoritesOnlineStatus;
+
+        private Boolean playBestQuality;
+        private Boolean loadAllGames;
+        private Boolean currentGameChanged;
 
         Process qualityCheckProcess;
         Process liveStreamerProcess;
         Process VLCStreamProcess;
 
+        Thread updateGamesThread;
         Thread updateLiveStreamsThread;
         Thread updateQualitiesThread;
 
@@ -37,11 +44,21 @@ namespace DesktopLiveStreamer
         {
             InitializeComponent();
 
+            listGames = new ListGames();
             listFavoriteStreams = new ListStreams();
             listLiveStreams = new ListStreams();
 
-            XMLPersist.XMLFile = "streamlist.xml";
-            XMLPersist.loadStreamListConfig(listFavoriteStreams);
+            XMLPersist.StreamXMLFile = "streamlist.xml";
+            XMLPersist.GameXMLFile = "gamelist.xml";
+            try
+            {
+                XMLPersist.loadStreamListConfig(listFavoriteStreams);
+                XMLPersist.loadGameListConfig(listGames);
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("An XML configuration file wasn't found");
+            }
 
             // Check if VLC executable is found
             if (!File.Exists(XMLPersist.VLCExecutable.Replace("\\\" --file-caching=5000", "").Replace("\\\"", "")))
@@ -56,7 +73,7 @@ namespace DesktopLiveStreamer
                 else
                 {
                     DialogResult r = MessageBox.Show(this, 
-                        "VLC player appears not to be installed or has been put in a different directory. Would you like to specify its path now ?", 
+                        "VLC player doesn't appear to be installed or has been put in a different directory. Would you like to specify its path now ?", 
                         "VLC Player not found", 
                         MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                     if (r == DialogResult.Yes)
@@ -68,12 +85,35 @@ namespace DesktopLiveStreamer
             // Check if LiveStreamer executable is found
             if (!File.Exists(XMLPersist.LiveStreamerExecutable))
             {
-                DialogResult r = MessageBox.Show(this, 
-                    "LiveStreamer appears not to be installed or has been put in a different directory. Would you like to specify its path now ?", 
+                DialogResult r = MessageBox.Show(this,
+                    "LiveStreamer doesn't appear to be installed or has been put in a different directory. Would you like to specify its path now ?", 
                     "LiveStreamer not found", 
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (r == DialogResult.Yes)
                     btnChangeStreamer_Click(this, EventArgs.Empty);
+            }
+
+            updateComboGames();
+
+            if (listGames.getSize() == 0)
+            {
+                btnChangeGame.Visible = false;
+                btnValidateGame.Visible = true;
+
+                loadAllGames = false;
+                updateGamesThread = new Thread(new ThreadStart(updateGames));
+                updateGamesThread.Start();
+            }
+            else
+            {
+                imgCmbGames.Enabled = false;
+                btnUpdateGames.Enabled = false;
+                btnUpdateGameMenu.Enabled = false;
+                btnValidateGame.Visible = false;
+                btnChangeGame.Visible = true;
+
+                updateLiveStreamsThread = new Thread(new ThreadStart(updateLiveStreams));
+                updateLiveStreamsThread.Start();
             }
 
             updateComboStreams();
@@ -81,6 +121,7 @@ namespace DesktopLiveStreamer
             playing = false;
             btnStop.Enabled = false;
             btnPlay.Enabled = false;
+            btnMnuPlayBest.Enabled = false;
             btnOpenBrowser.Enabled = false;
 
             radioList2.Checked = true;
@@ -92,9 +133,6 @@ namespace DesktopLiveStreamer
             btnAddLiveStream.Enabled = false;
 
             imgCmbStreams_SelectedIndexChanged(this, EventArgs.Empty);
-
-            updateLiveStreamsThread = new Thread(new ThreadStart(updateLiveStreams));
-            updateLiveStreamsThread.Start();
         }
 
         public Boolean FileExists()
@@ -122,7 +160,7 @@ namespace DesktopLiveStreamer
                     // or null is returned.
                     return (string)sk1.GetValue("");
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // AAAAAAAAAAARGH, an error!
                     Console.WriteLine("Error Reading VLC Executable path from registry");
@@ -156,6 +194,7 @@ namespace DesktopLiveStreamer
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
+            playBestQuality = false;
             playing = true;
 
             Thread playingThread = new Thread(new ThreadStart(playingLoop));
@@ -226,6 +265,7 @@ namespace DesktopLiveStreamer
             
 
             btnPlay.Enabled = true;
+            btnMnuPlayBest.Enabled = true;
             btnStop.Enabled = false;
         }
 
@@ -236,8 +276,18 @@ namespace DesktopLiveStreamer
                 groupFavorites.Enabled = true;
                 groupLive.Enabled = false;
 
-                btnPlay.Enabled = true;
-                btnOpenBrowser.Enabled = true;
+                if (imgCmbStreams.Items.Count > 0)
+                {
+                    btnPlay.Enabled = true;
+                    btnMnuPlayBest.Enabled = true;
+                    btnOpenBrowser.Enabled = true;
+                }
+                else
+                {
+                    btnPlay.Enabled = false;
+                    btnMnuPlayBest.Enabled = false;
+                    btnOpenBrowser.Enabled = false;
+                }
             }
             else if (radioList2.Checked)
             {
@@ -247,15 +297,22 @@ namespace DesktopLiveStreamer
                 if (imgCmbLiveStreams.Items.Count > 0)
                 {
                     if (updatingQualities)
+                    {
                         btnPlay.Enabled = false;
+                        btnMnuPlayBest.Enabled = false;
+                    }
                     else
+                    {
                         btnPlay.Enabled = true;
+                        btnMnuPlayBest.Enabled = true;
+                    }
 
                     btnOpenBrowser.Enabled = true;
                 }
                 else
                 {
                     btnPlay.Enabled = false;
+                    btnMnuPlayBest.Enabled = false;
                     btnOpenBrowser.Enabled = false;
                 }
             }
@@ -303,6 +360,29 @@ namespace DesktopLiveStreamer
             }
         }
 
+        public void updateComboGames()
+        {
+            imgCmbGames.Items.Clear();
+            Image img;
+            for (int i = 0; i < listGames.getSize(); i++)
+            {
+                if (listGames[i].Own3DGameID == "")
+                    img = DesktopLiveStreamer.Properties.Resources.twitch;
+                else if (listGames[i].TwitchGameID == "")
+                    img = DesktopLiveStreamer.Properties.Resources.own3d;
+                else
+                    img = DesktopLiveStreamer.Properties.Resources.all_hosts;
+
+                imgCmbGames.Items.Add(new DropDownItem(listGames[i].Viewers +
+                    ((listGames[i].Viewers != "") ? " - " : "") + listGames[i].Caption, img));
+            }
+            if (XMLPersist.DefaultGame != "")
+                imgCmbGames.SelectedIndex = listGames.find(XMLPersist.DefaultGame);
+            else if (imgCmbGames.Items.Count > 0)
+                imgCmbGames.SelectedIndex = 0;
+
+        }
+
         public void updateComboStreams()
         {
             imgCmbStreams.Items.Clear();
@@ -337,38 +417,43 @@ namespace DesktopLiveStreamer
 
 
         /// <summary>
-        /// /////////////////////////////////// UPDATE LIVE STREAMS
+        /// /////////////////////////////////// UPDATE LIVE GAMES
         /// </summary>
 
-        public void updateLiveStreams()
+        public void updateGames()
         {
             try
             {
-                updatingLiveStreams = true;
+                updatingGames = true;
 
                 if (statusStrip1.InvokeRequired)
                     statusStrip1.Invoke(new MethodInvoker(delegate
                     {
-                        statusLabel.Text = "Updating stream lists from Twitch.tv...";
+                        statusLabel.Text = "Updating game list from Twitch.tv...";
                         statusLabel.ForeColor = Color.Brown;
                     }));
 
-                if (progressLiveStreams.InvokeRequired)
-                    progressLiveStreams.Invoke(new MethodInvoker(delegate
+                if (progressGames.InvokeRequired)
+                    progressGames.Invoke(new MethodInvoker(delegate
                     {
-                        toolTip1.SetToolTip(progressLiveStreams, "Updating stream lists from Twitch.tv...");
-                        progressLiveStreams.Visible = true;
+                        toolTip1.SetToolTip(progressLiveStreams, "Updating game list from Twitch.tv...");
+                        progressGames.Visible = true;
                     }));
 
-                if (btnUpdate.InvokeRequired)
-                    btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = false; }));
+                if (btnUpdateGames.InvokeRequired)
+                    btnUpdateGames.Invoke(new MethodInvoker(delegate { btnUpdateGames.Enabled = false; }));
 
+                if (btnUpdateGameMenu.InvokeRequired)
+                    btnUpdateGameMenu.Invoke(new MethodInvoker(delegate { btnUpdateGameMenu.Enabled = false; }));
 
                 // Loading stream list from Twitch
-
-
-                string url = "https://api.twitch.tv/kraken/streams?game=League+of+Legends";
+                string url;
+                if (loadAllGames)
+                    url = "https://api.twitch.tv/kraken/games/top?limit=100";
+                else
+                    url = "https://api.twitch.tv/kraken/games/top";
                 WebRequest request = WebRequest.Create(url);
+                request.Timeout = 10000;
                 WebResponse ws = request.GetResponse();
 
                 String responseString = "";
@@ -380,37 +465,41 @@ namespace DesktopLiveStreamer
 
                 JObject obj = JObject.Parse(responseString);
 
-                JArray twitchStreams = (JArray)obj["streams"];
+                JArray twitchGames = (JArray)obj["top"];
 
-                listLiveStreams.clear();
+                listGames.clear();
 
-                for (int i = 0; i < twitchStreams.Count; i++)
+                for (int i = 0; i < twitchGames.Count; i++)
                 {
-                    listLiveStreams.add(new Stream((String)twitchStreams[i]["channel"]["status"],
-                                                    (String)twitchStreams[i]["channel"]["url"],
-                                                    long.Parse(twitchStreams[i]["viewers"].ToString()), "Twitch",
-                                                    (String)twitchStreams[i]["channel"]["name"]));
+                    listGames.add(new Game((String)twitchGames[i]["game"]["name"],
+                                                    (String)twitchGames[i]["game"]["name"],
+                                                    "",
+                                                    twitchGames[i]["viewers"].ToString()));
                 }
+
 
                 // Loading stream list from Own3D
 
                 if (statusStrip1.InvokeRequired)
                     statusStrip1.Invoke(new MethodInvoker(delegate
                     {
-                        statusLabel.Text = "Updating stream lists from Own3D.tv...";
+                        statusLabel.Text = "Updating game list from Own3D.tv...";
                         statusLabel.ForeColor = Color.Brown;
 
-                        progressLiveStreams.Visible = true;
+                        progressGames.Visible = true;
                     }));
 
                 if (progressLiveStreams.InvokeRequired)
                     progressLiveStreams.Invoke(new MethodInvoker(delegate
                     {
-                        toolTip1.SetToolTip(progressLiveStreams, "Updating stream lists from Own3D.tv...");
-                        progressLiveStreams.Visible = true;
+                        toolTip1.SetToolTip(progressGames, "Updating game list from Own3D.tv...");
+                        progressGames.Visible = true;
                     }));
 
-                url = "http://api.own3d.tv/rest/live/list.json?gameid=163";
+                if (loadAllGames)
+                    url = "http://api.own3d.tv/rest/game/list";
+                else
+                    url = "http://api.own3d.tv/rest/game/list?featured=1";
                 request = WebRequest.Create(url);
                 ws = request.GetResponse();
 
@@ -425,10 +514,260 @@ namespace DesktopLiveStreamer
 
                 for (int i = 0; i < own3dStreams.Count; i++)
                 {
-                    listLiveStreams.add(new Stream((String)own3dStreams[i]["live_name"],
-                                                    ((String)own3dStreams[i]["link"]).Replace("\\/", "/"),
-                                                    long.Parse(own3dStreams[i]["live_viewers"].ToString()), "Own3D",
-                                                    (String)own3dStreams[i]["live_id"]));
+                    int idx = -1;
+                    string caption = (String)own3dStreams[i]["game_name"];
+                    for (int j = 0; j < listGames.getSize(); j++)
+                    {
+                        // Look for the game even if the name isn't exactly the same
+                        if (listGames[j].Caption == caption) // ||
+                            //listGames[j].Caption.Contains(caption) ||
+                            //caption.Contains(listGames[j].Caption))
+                           idx = j;
+                    }
+
+                    if (idx != -1)
+                        listGames[idx].Own3DGameID = (String)own3dStreams[i]["game_id"];
+                    else
+                        listGames.add(new Game((String)own3dStreams[i]["game_name"],
+                                    "",
+                                    (String)own3dStreams[i]["game_id"], ""));
+                }
+
+                listGames.sortByViewers();
+
+                if (imgCmbGames.InvokeRequired)
+                    imgCmbGames.Invoke(new MethodInvoker(delegate
+                    {
+                        imgCmbGames.Items.Clear();
+                        Image img;
+                        for (int i = 0; i < listGames.getSize(); i++)
+                        {
+                            if (listGames[i].Own3DGameID == "")
+                                img = DesktopLiveStreamer.Properties.Resources.twitch;
+                            else if (listGames[i].TwitchGameID == "")
+                                img = DesktopLiveStreamer.Properties.Resources.own3d;
+                            else
+                                img = DesktopLiveStreamer.Properties.Resources.all_hosts;
+
+                            imgCmbGames.Items.Add(new DropDownItem(listGames[i].Viewers +
+                                ((listGames[i].Viewers != "")?" - ":"") + listGames[i].Caption, img));
+                        }
+                        if (imgCmbGames.Items.Count > 0)
+                            imgCmbGames.SelectedIndex = 0;
+                    }));
+
+
+                if (statusStrip1.InvokeRequired)
+                    statusStrip1.Invoke(new MethodInvoker(delegate
+                    {
+                        statusLabel.Text = "Ready";
+                        statusLabel.ForeColor = Color.Black;
+                    }));
+
+                updatingGames = false;
+            }
+            catch (ThreadAbortException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+            catch (WebException)
+            {
+                try
+                {
+                    if (statusStrip1.InvokeRequired)
+                        statusStrip1.Invoke(new MethodInvoker(delegate
+                        {
+                            statusLabel.Text = "Error: Connection failed. Check your internet access or firewall.";
+                            statusLabel.ForeColor = Color.Red;
+                        }));
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.StackTrace);
+                }
+            }
+            catch (Newtonsoft.Json.JsonException)
+            {
+                try
+                {
+                    for (int i = 0; i < listGames.getSize(); i++)
+                    {
+                        if (listGames[i].Own3DGameID == "")
+                            listGames[i].Caption = listGames[i].Caption + " (Twitch Only)";
+                    }
+
+                    listGames.sortByViewers();
+
+                    if (imgCmbGames.InvokeRequired)
+                        imgCmbGames.Invoke(new MethodInvoker(delegate
+                        {
+                            imgCmbGames.Items.Clear();
+                            Image img;
+                            for (int i = 0; i < listGames.getSize(); i++)
+                            {
+                                if (listGames[i].Own3DGameID == "")
+                                    img = DesktopLiveStreamer.Properties.Resources.twitch;
+                                else if (listGames[i].TwitchGameID == "")
+                                    img = DesktopLiveStreamer.Properties.Resources.own3d;
+                                else
+                                    img = DesktopLiveStreamer.Properties.Resources.all_hosts;
+
+                                imgCmbGames.Items.Add(new DropDownItem(listGames[i].Viewers +
+                                    ((listGames[i].Viewers != "") ? " - " : "") + listGames[i].Caption, img));
+                            }
+                            if (imgCmbGames.Items.Count > 0)
+                                imgCmbGames.SelectedIndex = 0;
+                        }));
+
+
+                    if (statusStrip1.InvokeRequired)
+                        statusStrip1.Invoke(new MethodInvoker(delegate
+                        {
+                            statusLabel.Text = "Ready";
+                            statusLabel.ForeColor = Color.Black;
+                        }));
+
+                    updatingGames = false;
+                }
+                catch (ThreadAbortException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+            finally
+            {
+                if (btnUpdateGames.InvokeRequired)
+                    btnUpdateGames.Invoke(new MethodInvoker(delegate { btnUpdateGames.Enabled = true; }));
+
+                if (btnUpdateGameMenu.InvokeRequired)
+                    btnUpdateGameMenu.Invoke(new MethodInvoker(delegate { btnUpdateGameMenu.Enabled = true; }));
+
+                if (progressGames.InvokeRequired)
+                    progressGames.Invoke(new MethodInvoker(delegate { progressGames.Visible = false; }));
+            }
+        }
+
+
+        /// <summary>
+        /// /////////////////////////////////// UPDATE LIVE STREAMS
+        /// </summary>
+
+        public void updateLiveStreams()
+        {
+            try
+            {
+                updatingLiveStreams = true;
+
+                if (btnUpdate.InvokeRequired)
+                    btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = false; }));
+
+                if (btnChangeGame.InvokeRequired)
+                    btnChangeGame.Invoke(new MethodInvoker(delegate
+                    {
+                        btnChangeGame.Enabled = false;
+                        btnValidateGame.Enabled = false;
+                    }));
+
+                // Loading stream list from Twitch
+
+                if (statusStrip1.InvokeRequired)
+                    statusStrip1.Invoke(new MethodInvoker(delegate
+                    {
+                        statusLabel.Text = "Updating stream list from Twitch.tv...";
+                        statusLabel.ForeColor = Color.Brown;
+                    }));
+
+                if (progressLiveStreams.InvokeRequired)
+                    progressLiveStreams.Invoke(new MethodInvoker(delegate
+                    {
+                        toolTip1.SetToolTip(progressLiveStreams, "Updating stream list from Twitch.tv...");
+                        progressLiveStreams.Visible = true;
+                    }));
+
+                string url;
+                WebRequest request;
+                WebResponse ws;
+                String responseString;
+
+                listLiveStreams.clear();
+
+                int idx = listGames.find(XMLPersist.DefaultGame);
+
+                if (listGames[idx].TwitchGameID != "")
+                {
+                    url = "https://api.twitch.tv/kraken/streams?game=" + listGames[idx].TwitchGameID;
+                    request = WebRequest.Create(url);
+                    ws = request.GetResponse();
+
+                    responseString = "";
+                    using (System.IO.Stream stream = ws.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                        responseString = reader.ReadToEnd();
+                    }
+
+                    JObject obj = JObject.Parse(responseString);
+
+                    JArray twitchStreams = (JArray)obj["streams"];
+
+                    for (int i = 0; i < twitchStreams.Count; i++)
+                    {
+                        listLiveStreams.add(new Stream((String)twitchStreams[i]["channel"]["status"],
+                                                        (String)twitchStreams[i]["channel"]["url"],
+                                                        long.Parse(twitchStreams[i]["viewers"].ToString()), "Twitch",
+                                                        (String)twitchStreams[i]["channel"]["name"]));
+                    }
+                }
+
+                // Loading stream list from Own3D
+
+                if (statusStrip1.InvokeRequired)
+                    statusStrip1.Invoke(new MethodInvoker(delegate
+                    {
+                        statusLabel.Text = "Updating stream list from Own3D.tv...";
+                        statusLabel.ForeColor = Color.Brown;
+
+                        progressLiveStreams.Visible = true;
+                    }));
+
+                if (progressLiveStreams.InvokeRequired)
+                    progressLiveStreams.Invoke(new MethodInvoker(delegate
+                    {
+                        toolTip1.SetToolTip(progressLiveStreams, "Updating stream list from Own3D.tv...");
+                        progressLiveStreams.Visible = true;
+                    }));
+
+
+                if (listGames[idx].Own3DGameID != "")
+                {
+                    url = "http://api.own3d.tv/rest/live/list.json?gameid=" + listGames[idx].Own3DGameID;
+                    request = WebRequest.Create(url);
+                    ws = request.GetResponse();
+
+                    responseString = "";
+                    using (System.IO.Stream stream = ws.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                        responseString = reader.ReadToEnd();
+                    }
+
+                    JArray own3dStreams = JArray.Parse(responseString);
+
+                    for (int i = 0; i < own3dStreams.Count; i++)
+                    {
+                        listLiveStreams.add(new Stream((String)own3dStreams[i]["live_name"],
+                                                        ((String)own3dStreams[i]["link"]).Replace("\\/", "/"),
+                                                        long.Parse(own3dStreams[i]["live_viewers"].ToString()), "Own3D",
+                                                        (String)own3dStreams[i]["live_id"]));
+                    }
                 }
 
                 listLiveStreams.sortByViewers();
@@ -457,12 +796,23 @@ namespace DesktopLiveStreamer
                         statusLabel.ForeColor = Color.Black;
                     }));
 
-                if (qualityCheckProcess != null && !qualityCheckProcess.HasExited)
-                    qualityCheckProcess.Kill();
-                if (updateQualitiesThread != null)
-                    updateQualitiesThread.Abort();
-                updateQualitiesThread = new Thread(new ThreadStart(updateQualities));
-                updateQualitiesThread.Start();
+                if (listLiveStreams.getSize() > 0)
+                {
+                    if (qualityCheckProcess != null && !qualityCheckProcess.HasExited)
+                        qualityCheckProcess.Kill();
+                    if (updateQualitiesThread != null)
+                        updateQualitiesThread.Abort();
+                    updateQualitiesThread = new Thread(new ThreadStart(updateQualities));
+                    updateQualitiesThread.Start();
+                }
+                else
+                {
+                    if (cmbQualities.InvokeRequired)
+                        cmbQualities.Invoke(new MethodInvoker(delegate
+                        {
+                            cmbQualities.Items.Clear();
+                        }));
+                }
 
                 updatingLiveStreams = false;
             }
@@ -490,40 +840,48 @@ namespace DesktopLiveStreamer
             }
             catch (Newtonsoft.Json.JsonException)
             {
-                listLiveStreams.sortByViewers();
+                try
+                {
+                    listLiveStreams.sortByViewers();
 
-                if (imgCmbLiveStreams.InvokeRequired)
-                    imgCmbLiveStreams.Invoke(new MethodInvoker(delegate
-                    {
-                        imgCmbLiveStreams.Items.Clear();
-                        Image img;
-                        for (int i = 0; i < listLiveStreams.getSize(); i++)
+                    if (imgCmbLiveStreams.InvokeRequired)
+                        imgCmbLiveStreams.Invoke(new MethodInvoker(delegate
                         {
-                            img = (listLiveStreams[i].Host.Equals("Twitch") ?
-                                    DesktopLiveStreamer.Properties.Resources.twitch :
-                                    DesktopLiveStreamer.Properties.Resources.own3d);
-                            imgCmbLiveStreams.Items.Add(new DropDownItem(listLiveStreams[i].Viewers.ToString() +
-                                                                    " - " + listLiveStreams[i].Caption, img));
-                        }
-                        if (imgCmbLiveStreams.Items.Count > 0)
-                            imgCmbLiveStreams.SelectedIndex = 0;
-                    }));
+                            imgCmbLiveStreams.Items.Clear();
+                            Image img;
+                            for (int i = 0; i < listLiveStreams.getSize(); i++)
+                            {
+                                img = (listLiveStreams[i].Host.Equals("Twitch") ?
+                                        DesktopLiveStreamer.Properties.Resources.twitch :
+                                        DesktopLiveStreamer.Properties.Resources.own3d);
+                                imgCmbLiveStreams.Items.Add(new DropDownItem(listLiveStreams[i].Viewers.ToString() +
+                                                                        " - " + listLiveStreams[i].Caption, img));
+                            }
+                            if (imgCmbLiveStreams.Items.Count > 0)
+                                imgCmbLiveStreams.SelectedIndex = 0;
+                        }));
 
-                if (statusStrip1.InvokeRequired)
-                    statusStrip1.Invoke(new MethodInvoker(delegate
-                    {
-                        statusLabel.Text = "Ready";
-                        statusLabel.ForeColor = Color.Black;
-                    }));
+                    if (statusStrip1.InvokeRequired)
+                        statusStrip1.Invoke(new MethodInvoker(delegate
+                        {
+                            statusLabel.Text = "Ready";
+                            statusLabel.ForeColor = Color.Black;
+                        }));
 
-                if (qualityCheckProcess != null && !qualityCheckProcess.HasExited)
-                    qualityCheckProcess.Kill();
-                if (updateQualitiesThread != null)
-                    updateQualitiesThread.Abort();
-                updateQualitiesThread = new Thread(new ThreadStart(updateQualities));
-                updateQualitiesThread.Start();
+                    if (qualityCheckProcess != null && !qualityCheckProcess.HasExited)
+                        qualityCheckProcess.Kill();
+                    if (updateQualitiesThread != null)
+                        updateQualitiesThread.Abort();
+                    updateQualitiesThread = new Thread(new ThreadStart(updateQualities));
+                    updateQualitiesThread.Start();
 
-                updatingLiveStreams = false;
+                    updatingLiveStreams = false;
+                }
+                catch (ThreadAbortException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                }
             }
             catch (Exception ex)
             {
@@ -532,14 +890,38 @@ namespace DesktopLiveStreamer
             }
             finally
             {
+                if (btnChangeGame.InvokeRequired)
+                    btnChangeGame.Invoke(new MethodInvoker(delegate
+                    {
+                        btnChangeGame.Enabled = true;
+                        btnValidateGame.Enabled = true;
+                    }));
+
                 if (btnUpdate.InvokeRequired)
                     btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = true; }));
 
-                if (btnPlay.InvokeRequired)
-                    btnPlay.Invoke(new MethodInvoker(delegate { btnPlay.Enabled = true; }));
+                if (listLiveStreams.getSize() > 0)
+                {
+                    if (btnPlay.InvokeRequired)
+                        btnPlay.Invoke(new MethodInvoker(delegate {
+                            btnPlay.Enabled = true;
+                            btnMnuPlayBest.Enabled = true;
+                        }));
 
-                if (btnOpenBrowser.InvokeRequired)
-                    btnOpenBrowser.Invoke(new MethodInvoker(delegate { btnOpenBrowser.Enabled = true; }));
+                    if (btnOpenBrowser.InvokeRequired)
+                        btnOpenBrowser.Invoke(new MethodInvoker(delegate { btnOpenBrowser.Enabled = true; }));
+                }
+                else
+                {
+                    if (btnPlay.InvokeRequired)
+                        btnPlay.Invoke(new MethodInvoker(delegate {
+                            btnPlay.Enabled = false;
+                            btnMnuPlayBest.Enabled = false;
+                        }));
+
+                    if (btnOpenBrowser.InvokeRequired)
+                        btnOpenBrowser.Invoke(new MethodInvoker(delegate { btnOpenBrowser.Enabled = false; }));
+                }
 
                 if (progressLiveStreams.InvokeRequired)
                     progressLiveStreams.Invoke(new MethodInvoker(delegate { progressLiveStreams.Visible = false; }));
@@ -563,7 +945,9 @@ namespace DesktopLiveStreamer
                     btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = false; }));
 
                 if (btnPlay.InvokeRequired)
-                    btnPlay.Invoke(new MethodInvoker(delegate { btnPlay.Enabled = false; }));
+                    btnPlay.Invoke(new MethodInvoker(delegate {
+                        btnPlay.Enabled = false;
+                    }));
 
                 if (cmbQualities.InvokeRequired)
                     cmbQualities.Invoke(new MethodInvoker(delegate { cmbQualities.Enabled = false; }));
@@ -649,8 +1033,11 @@ namespace DesktopLiveStreamer
                 if (btnUpdate.InvokeRequired)
                     btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = true; }));
 
-                if (btnPlay.InvokeRequired)
-                    btnPlay.Invoke(new MethodInvoker(delegate { btnPlay.Enabled = true; }));
+                if (radioList2.Checked)
+                    if (btnPlay.InvokeRequired)
+                        btnPlay.Invoke(new MethodInvoker(delegate {
+                            btnPlay.Enabled = true;
+                        }));
 
                 if (btnAddLiveStream.InvokeRequired)
                     btnAddLiveStream.Invoke(new MethodInvoker(delegate { btnAddLiveStream.Enabled = true; }));
@@ -811,16 +1198,32 @@ namespace DesktopLiveStreamer
             if (live)
             {
                 if (imgCmbLiveStreams.InvokeRequired)
-                    imgCmbLiveStreams.Invoke(new MethodInvoker(delegate { index = imgCmbLiveStreams.SelectedIndex; }));
+                    imgCmbLiveStreams.Invoke(new MethodInvoker(delegate {
+                        if (imgCmbLiveStreams.Items.Count > 0)
+                            index = imgCmbLiveStreams.SelectedIndex;
+                        else
+                            playing = false;
+                    }));
 
-                if (cmbQualities.InvokeRequired)
-                    cmbQualities.Invoke(new MethodInvoker(delegate { quality = (String)cmbQualities.SelectedItem; }));
+                if (playBestQuality)
+                    quality = "best";
+                else
+                    if (cmbQualities.InvokeRequired)
+                        cmbQualities.Invoke(new MethodInvoker(delegate {
+                            quality = (String)cmbQualities.SelectedItem;
+                        }));
 
             }
             else
             {
                 if (imgCmbStreams.InvokeRequired)
-                    imgCmbStreams.Invoke(new MethodInvoker(delegate { index = imgCmbStreams.SelectedIndex; }));
+                    imgCmbStreams.Invoke(new MethodInvoker(delegate {
+                        if (imgCmbStreams.Items.Count > 0)
+                            index = imgCmbStreams.SelectedIndex;
+                        else
+                            playing = false;
+                        
+                    }));
             }
 
 
@@ -842,7 +1245,10 @@ namespace DesktopLiveStreamer
                 {
                     caption = listFavoriteStreams[index].Caption;
                     url = listFavoriteStreams[index].StreamUrl;
-                    quality = listFavoriteStreams[index].Quality;
+                    if (playBestQuality)
+                        quality = "best";
+                    else
+                        quality = listFavoriteStreams[index].Quality;
                 }
                     
 
@@ -870,7 +1276,10 @@ namespace DesktopLiveStreamer
                 while (!liveStreamerProcess.HasExited)
                 {
                     if (btnPlay.InvokeRequired)
-                        btnPlay.Invoke(new MethodInvoker(delegate { btnPlay.Enabled = false; }));
+                        btnPlay.Invoke(new MethodInvoker(delegate {
+                            btnPlay.Enabled = false;
+                            btnMnuPlayBest.Enabled = false;
+                        }));
 
                     if (btnStop.InvokeRequired)
                         btnStop.Invoke(new MethodInvoker(delegate { btnStop.Enabled = true; }));
@@ -933,7 +1342,10 @@ namespace DesktopLiveStreamer
             }
 
             if (btnPlay.InvokeRequired)
-                btnPlay.Invoke(new MethodInvoker(delegate { btnPlay.Enabled = true; }));
+                btnPlay.Invoke(new MethodInvoker(delegate {
+                    btnPlay.Enabled = true;
+                    btnMnuPlayBest.Enabled = true;
+                }));
 
             if (btnStop.InvokeRequired)
                 btnStop.Invoke(new MethodInvoker(delegate { btnStop.Enabled = false; }));
@@ -1017,6 +1429,81 @@ namespace DesktopLiveStreamer
                 if (imgCmbLiveStreams.Items.Count > 0)
                     Process.Start(listLiveStreams[imgCmbLiveStreams.SelectedIndex].StreamUrl);
             }
+        }
+
+        private void btnUpdateGames_Click(object sender, EventArgs e)
+        {
+            loadAllGames = false;
+            updateGamesThread = new Thread(new ThreadStart(updateGames));
+            updateGamesThread.Start();
+        }
+
+        private void btnUpdateGameMenu_Click(object sender, EventArgs e)
+        {
+            contextMenuUpdateGames.Show(btnUpdateGameMenu, new Point(btnUpdateGameMenu.Width, btnUpdateGameMenu.Height), ToolStripDropDownDirection.BelowLeft);
+        }
+
+        private void mnuUpdateAllGames_Click(object sender, EventArgs e)
+        {
+            loadAllGames = true;
+            updateGamesThread = new Thread(new ThreadStart(updateGames));
+            updateGamesThread.Start();
+        }
+
+        private void btnValidateGame_Click(object sender, EventArgs e)
+        {
+            if (XMLPersist.DefaultGame != listGames[imgCmbGames.SelectedIndex].Caption)
+                currentGameChanged = true;
+            else
+                currentGameChanged = false;
+
+            XMLPersist.DefaultGame = listGames[imgCmbGames.SelectedIndex].Caption;
+            XMLPersist.saveGameListConfig(listGames);
+
+            imgCmbGames.Enabled = false;
+            btnUpdateGames.Enabled = false;
+            btnUpdateGameMenu.Enabled = false;
+            btnValidateGame.Visible = false;
+            btnChangeGame.Visible = true;
+
+            if (currentGameChanged)
+            {
+                if (updateLiveStreamsThread != null)
+                    updateLiveStreamsThread.Abort();
+                updateLiveStreamsThread = new Thread(new ThreadStart(updateLiveStreams));
+                updateLiveStreamsThread.Start();
+            }
+        }
+
+        private void btnChangeGame_Click(object sender, EventArgs e)
+        {
+            imgCmbGames.Enabled = true;
+            btnUpdateGames.Enabled = true;
+            btnUpdateGameMenu.Enabled = true;
+            btnValidateGame.Visible = true;
+            btnChangeGame.Visible = false;
+        }
+
+        private void btnAbout_Click(object sender, EventArgs e)
+        {
+            FrmAbout frmAbout = new FrmAbout();
+
+            frmAbout.ShowDialog();
+        }
+
+        private void mnuPlayBest_Click(object sender, EventArgs e)
+        {
+            playBestQuality = true;
+            playing = true;
+
+            Thread playingThread = new Thread(new ThreadStart(playingLoop));
+            playingThread.Start();
+        }
+
+        private void btnMnuPlayBest_Click(object sender, EventArgs e)
+        {
+            contextMenuPlayBest.Show(btnMnuPlayBest, new Point(btnMnuPlayBest.Width, btnMnuPlayBest.Height), 
+                        ToolStripDropDownDirection.BelowLeft);
         }
     }
 }

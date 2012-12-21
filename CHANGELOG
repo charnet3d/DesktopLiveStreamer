@@ -1,0 +1,32 @@
+Version 0.9
+-----------
+
+Features:
+
+- added the ability to play the best quality of a stream without having to select it from the list of qualities (or even waiting for it to load)
+
+- added a button to open a stream in default browser
+
+- added the possibility to choose the game you want to watch from a list of games, the list of games and the selected game get saved to avoiding the need to load the list and choose a game at every startup of the application.
+
+- added about box, giving credit to the maker of livestreamer
+
+
+Fixes:
+- corrected exceptions happening when stream lists become empty
+
+
+Version 0.8.2
+-------------
+
+Fixes:
+
+- Made a temporary fix for a problem causing the update of the list of streams to hang when loading own3d streams. Sometimes the response from own3d servers gives an exception while parsing it, for now if that happens we only load twitch streams. 
+
+- Included the newest version of livestreamer 1.4. This made a visible improvement in the time taken to load the qualities lists (from an average of ~16secs for twitch and ~30secs for own3d to about 5secs for both)
+
+
+Version 0.8
+-----------
+
+First Stable release featuring twitch and own3d streams
