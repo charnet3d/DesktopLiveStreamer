@@ -3,7 +3,7 @@ Desktop Live Streamer
 
 An easy to use application that facilitates watching gaming related streams on Windows, right from you desktop.
 
-Current release: **0.9 Beta** (2012-12-21)
+Current release: **0.9 Beta** (2012-12-23)
 
 Requirements:
 -------------
