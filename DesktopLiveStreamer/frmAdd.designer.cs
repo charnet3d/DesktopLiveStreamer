@@ -135,6 +135,8 @@
             this.Controls.Add(this.lblURL);
             this.Controls.Add(this.btnModify);
             this.Controls.Add(this.btnAdd);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "FrmAdd";
             this.Text = "Add new stream";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmAdd_FormClosed);

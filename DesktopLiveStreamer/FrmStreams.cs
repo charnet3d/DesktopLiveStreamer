@@ -950,7 +950,7 @@ namespace DesktopLiveStreamer
                 if (btnUpdate.InvokeRequired)
                     btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = true; }));
 
-                if (listLiveStreams.getSize() > 0)
+                if (listLiveStreams.getSize() > 0 && radioList2.Checked)
                 {
                     if (btnPlay.InvokeRequired)
                         btnPlay.Invoke(new MethodInvoker(delegate {
@@ -1369,7 +1369,8 @@ namespace DesktopLiveStreamer
 
                     if ((VLCStreamProcess = getVLCStreamProcess()) != null)
                     {
-                        if (!updatingLiveStreams && !updatingQualities && !checkingFavoritesOnlineStatus)
+                        if (!updatingLiveStreams && !updatingQualities && !checkingFavoritesOnlineStatus
+                            && !updatingGames)
                         {
                             if (statusStrip1.InvokeRequired)
                                 statusStrip1.Invoke(new MethodInvoker(delegate
