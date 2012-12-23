@@ -12,6 +12,23 @@ Requirements:
 * VLC Player (x64 version not supported)
 * Administrative rights on Windows Seven 64 Bit
 
+Download:
+---------
+
+* Latest release:
+
+0.9 Beta
+http://www.mediafire.com/file/q74s99vv2is3csx/DesktopLiveStreamer-0.9-Beta-Win32-Setup.rar
+
+
+* Older versions:
+
+0.8.2 Beta
+http://www.mediafire.com/file/kvys9vk56px5u18/Desktop_Live_Streamer_0.8.2_Beta_Installer.rar
+
+0.8 Beta
+http://www.mediafire.com/file/reaceci7px7rzty/Desktop_Live_Streamer_0.8_Beta_Installer.rar
+
 
 Installing:
 -----------
