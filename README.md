@@ -9,8 +9,7 @@ Requirements:
 -------------
 
 * Framework .Net version 4.0 (Can be downloaded during installation)
-* VLC Player (x64 version not supported)
-* Administrative rights on Windows Seven 64 Bit
+* Administrative rights on Windows 8 and Windows Seven 64 Bit
 
 Download:
 ---------
