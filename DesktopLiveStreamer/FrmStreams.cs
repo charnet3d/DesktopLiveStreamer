@@ -530,58 +530,58 @@ namespace DesktopLiveStreamer
 
                 // Loading stream list from Own3D
 
-                if (statusStrip1.InvokeRequired)
-                    statusStrip1.Invoke(new MethodInvoker(delegate
-                    {
-                        statusLabel.Text = "Updating game list from Own3D.tv...";
-                        statusLabel.ForeColor = Color.Brown;
+                //if (statusStrip1.InvokeRequired)
+                //    statusStrip1.Invoke(new MethodInvoker(delegate
+                //    {
+                //        statusLabel.Text = "Updating game list from Own3D.tv...";
+                //        statusLabel.ForeColor = Color.Brown;
 
-                        progressGames.Visible = true;
-                    }));
+                //        progressGames.Visible = true;
+                //    }));
 
-                if (progressLiveStreams.InvokeRequired)
-                    progressLiveStreams.Invoke(new MethodInvoker(delegate
-                    {
-                        toolTip1.SetToolTip(progressGames, "Updating game list from Own3D.tv...");
-                        progressGames.Visible = true;
-                    }));
+                //if (progressLiveStreams.InvokeRequired)
+                //    progressLiveStreams.Invoke(new MethodInvoker(delegate
+                //    {
+                //        toolTip1.SetToolTip(progressGames, "Updating game list from Own3D.tv...");
+                //        progressGames.Visible = true;
+                //    }));
 
-                if (loadAllGames)
-                    url = "http://api.own3d.tv/rest/game/list";
-                else
-                    url = "http://api.own3d.tv/rest/game/list?featured=1";
-                request = WebRequest.Create(url);
-                ws = request.GetResponse();
+                //if (loadAllGames)
+                //    url = "http://api.own3d.tv/rest/game/list";
+                //else
+                //    url = "http://api.own3d.tv/rest/game/list?featured=1";
+                //request = WebRequest.Create(url);
+                //ws = request.GetResponse();
 
-                responseString = "";
-                using (System.IO.Stream stream = ws.GetResponseStream())
-                {
-                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                    responseString = reader.ReadToEnd();
-                }
+                //responseString = "";
+                //using (System.IO.Stream stream = ws.GetResponseStream())
+                //{
+                //    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                //    responseString = reader.ReadToEnd();
+                //}
 
-                JArray own3dStreams = JArray.Parse(responseString);
+                //JArray own3dStreams = JArray.Parse(responseString);
 
-                for (int i = 0; i < own3dStreams.Count; i++)
-                {
-                    int idx = -1;
-                    string caption = (String)own3dStreams[i]["game_name"];
-                    for (int j = 0; j < listGames.getSize(); j++)
-                    {
-                        // Look for the game even if the name isn't exactly the same
-                        if (listGames[j].Caption == caption) // ||
-                            //listGames[j].Caption.Contains(caption) ||
-                            //caption.Contains(listGames[j].Caption))
-                           idx = j;
-                    }
+                //for (int i = 0; i < own3dStreams.Count; i++)
+                //{
+                //    int idx = -1;
+                //    string caption = (String)own3dStreams[i]["game_name"];
+                //    for (int j = 0; j < listGames.getSize(); j++)
+                //    {
+                //        // Look for the game even if the name isn't exactly the same
+                //        if (listGames[j].Caption == caption) // ||
+                //            //listGames[j].Caption.Contains(caption) ||
+                //            //caption.Contains(listGames[j].Caption))
+                //           idx = j;
+                //    }
 
-                    if (idx != -1)
-                        listGames[idx].Own3DGameID = (String)own3dStreams[i]["game_id"];
-                    else
-                        listGames.add(new Game((String)own3dStreams[i]["game_name"],
-                                    "",
-                                    (String)own3dStreams[i]["game_id"], ""));
-                }
+                //    if (idx != -1)
+                //        listGames[idx].Own3DGameID = (String)own3dStreams[i]["game_id"];
+                //    else
+                //        listGames.add(new Game((String)own3dStreams[i]["game_name"],
+                //                    "",
+                //                    (String)own3dStreams[i]["game_id"], ""));
+                //}
 
                 listGames.sortByViewers();
 
@@ -779,46 +779,46 @@ namespace DesktopLiveStreamer
 
                 // Loading stream list from Own3D
 
-                if (statusStrip1.InvokeRequired)
-                    statusStrip1.Invoke(new MethodInvoker(delegate
-                    {
-                        statusLabel.Text = "Updating stream list from Own3D.tv...";
-                        statusLabel.ForeColor = Color.Brown;
+                //if (statusStrip1.InvokeRequired)
+                //    statusStrip1.Invoke(new MethodInvoker(delegate
+                //    {
+                //        statusLabel.Text = "Updating stream list from Own3D.tv...";
+                //        statusLabel.ForeColor = Color.Brown;
 
-                        progressLiveStreams.Visible = true;
-                    }));
+                //        progressLiveStreams.Visible = true;
+                //    }));
 
-                if (progressLiveStreams.InvokeRequired)
-                    progressLiveStreams.Invoke(new MethodInvoker(delegate
-                    {
-                        toolTip1.SetToolTip(progressLiveStreams, "Updating stream list from Own3D.tv...");
-                        progressLiveStreams.Visible = true;
-                    }));
+                //if (progressLiveStreams.InvokeRequired)
+                //    progressLiveStreams.Invoke(new MethodInvoker(delegate
+                //    {
+                //        toolTip1.SetToolTip(progressLiveStreams, "Updating stream list from Own3D.tv...");
+                //        progressLiveStreams.Visible = true;
+                //    }));
 
 
-                if (listGames[idx].Own3DGameID != "")
-                {
-                    url = "http://api.own3d.tv/rest/live/list.json?gameid=" + listGames[idx].Own3DGameID;
-                    request = WebRequest.Create(url);
-                    ws = request.GetResponse();
+                //if (listGames[idx].Own3DGameID != "")
+                //{
+                //    url = "http://api.own3d.tv/rest/live/list.json?gameid=" + listGames[idx].Own3DGameID;
+                //    request = WebRequest.Create(url);
+                //    ws = request.GetResponse();
 
-                    responseString = "";
-                    using (System.IO.Stream stream = ws.GetResponseStream())
-                    {
-                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                        responseString = reader.ReadToEnd();
-                    }
+                //    responseString = "";
+                //    using (System.IO.Stream stream = ws.GetResponseStream())
+                //    {
+                //        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                //        responseString = reader.ReadToEnd();
+                //    }
 
-                    JArray own3dStreams = JArray.Parse(responseString);
+                //    JArray own3dStreams = JArray.Parse(responseString);
 
-                    for (int i = 0; i < own3dStreams.Count; i++)
-                    {
-                        listLiveStreams.add(new Stream((String)own3dStreams[i]["live_name"],
-                                                        ((String)own3dStreams[i]["link"]).Replace("\\/", "/"),
-                                                        long.Parse(own3dStreams[i]["live_viewers"].ToString()), "Own3D",
-                                                        (String)own3dStreams[i]["live_id"]));
-                    }
-                }
+                //    for (int i = 0; i < own3dStreams.Count; i++)
+                //    {
+                //        listLiveStreams.add(new Stream((String)own3dStreams[i]["live_name"],
+                //                                        ((String)own3dStreams[i]["link"]).Replace("\\/", "/"),
+                //                                        long.Parse(own3dStreams[i]["live_viewers"].ToString()), "Own3D",
+                //                                        (String)own3dStreams[i]["live_id"]));
+                //    }
+                //}
 
                 listLiveStreams.sortByViewers();
 

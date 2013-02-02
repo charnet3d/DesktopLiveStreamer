@@ -37,11 +37,13 @@
             this.groupLive = new System.Windows.Forms.GroupBox();
             this.progressQuality = new System.Windows.Forms.ProgressBar();
             this.progressLiveStreams = new System.Windows.Forms.ProgressBar();
+            this.imgCmbLiveStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.btnAddLiveStream = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.cmbQualities = new System.Windows.Forms.ComboBox();
             this.groupFavorites = new System.Windows.Forms.GroupBox();
             this.progressFavorites = new System.Windows.Forms.ProgressBar();
+            this.imgCmbStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.btnCheckOnline = new System.Windows.Forms.Button();
             this.btnClone = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -57,15 +59,11 @@
             this.btnUpdateGames = new System.Windows.Forms.Button();
             this.btnOpenBrowser = new System.Windows.Forms.Button();
             this.groupGames = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.btnChangeGame = new System.Windows.Forms.Button();
             this.btnUpdateGameMenu = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.imgCmbGames = new DesktopLiveStreamer.ImageDropDownList();
             this.progressGames = new System.Windows.Forms.ProgressBar();
             this.btnValidateGame = new System.Windows.Forms.Button();
             this.contextMenuUpdateGames = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -74,17 +72,12 @@
             this.btnMnuPlayBest = new System.Windows.Forms.Button();
             this.contextMenuPlayBest = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuPlayBest = new System.Windows.Forms.ToolStripMenuItem();
-            this.imgCmbGames = new DesktopLiveStreamer.ImageDropDownList();
-            this.imgCmbLiveStreams = new DesktopLiveStreamer.ImageDropDownList();
-            this.imgCmbStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.groupBox1.SuspendLayout();
             this.groupLive.SuspendLayout();
             this.groupFavorites.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupGames.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuUpdateGames.SuspendLayout();
             this.contextMenuPlayBest.SuspendLayout();
             this.SuspendLayout();
@@ -173,6 +166,17 @@
             this.progressLiveStreams.TabIndex = 24;
             this.progressLiveStreams.Visible = false;
             // 
+            // imgCmbLiveStreams
+            // 
+            this.imgCmbLiveStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbLiveStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbLiveStreams.FormattingEnabled = true;
+            this.imgCmbLiveStreams.Location = new System.Drawing.Point(6, 21);
+            this.imgCmbLiveStreams.Name = "imgCmbLiveStreams";
+            this.imgCmbLiveStreams.Size = new System.Drawing.Size(396, 23);
+            this.imgCmbLiveStreams.TabIndex = 21;
+            this.imgCmbLiveStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbLiveStreams_SelectedIndexChanged_1);
+            // 
             // btnAddLiveStream
             // 
             this.btnAddLiveStream.Image = global::DesktopLiveStreamer.Properties.Resources.favoriteImg;
@@ -229,6 +233,17 @@
             this.progressFavorites.Step = 1;
             this.progressFavorites.TabIndex = 23;
             this.progressFavorites.Visible = false;
+            // 
+            // imgCmbStreams
+            // 
+            this.imgCmbStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbStreams.FormattingEnabled = true;
+            this.imgCmbStreams.Location = new System.Drawing.Point(6, 16);
+            this.imgCmbStreams.Name = "imgCmbStreams";
+            this.imgCmbStreams.Size = new System.Drawing.Size(513, 23);
+            this.imgCmbStreams.TabIndex = 22;
+            this.imgCmbStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbStreams_SelectedIndexChanged);
             // 
             // btnCheckOnline
             // 
@@ -366,16 +381,11 @@
             // 
             // groupGames
             // 
-            this.groupGames.Controls.Add(this.label4);
             this.groupGames.Controls.Add(this.btnChangeGame);
             this.groupGames.Controls.Add(this.btnUpdateGames);
             this.groupGames.Controls.Add(this.btnUpdateGameMenu);
-            this.groupGames.Controls.Add(this.label3);
-            this.groupGames.Controls.Add(this.pictureBox3);
             this.groupGames.Controls.Add(this.label2);
             this.groupGames.Controls.Add(this.pictureBox2);
-            this.groupGames.Controls.Add(this.label1);
-            this.groupGames.Controls.Add(this.pictureBox1);
             this.groupGames.Controls.Add(this.imgCmbGames);
             this.groupGames.Controls.Add(this.progressGames);
             this.groupGames.Controls.Add(this.btnValidateGame);
@@ -386,15 +396,6 @@
             this.groupGames.TabIndex = 21;
             this.groupGames.TabStop = false;
             this.groupGames.Text = "Live Game to Watch :";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(274, 59);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(319, 13);
-            this.label4.TabIndex = 36;
-            this.label4.Text = "(Own3D doesn\'t report the number of viewers for game lists)";
             // 
             // btnChangeGame
             // 
@@ -416,29 +417,10 @@
             this.btnUpdateGameMenu.UseVisualStyleBackColor = true;
             this.btnUpdateGameMenu.Click += new System.EventHandler(this.btnUpdateGameMenu_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(197, 59);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 13);
-            this.label3.TabIndex = 34;
-            this.label3.Text = "Own3D only";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::DesktopLiveStreamer.Properties.Resources.own3d;
-            this.pictureBox3.Location = new System.Drawing.Point(177, 57);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 33;
-            this.pictureBox3.TabStop = false;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(110, 59);
+            this.label2.Location = new System.Drawing.Point(35, 61);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 32;
@@ -447,31 +429,22 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = global::DesktopLiveStreamer.Properties.Resources.twitch;
-            this.pictureBox2.Location = new System.Drawing.Point(90, 57);
+            this.pictureBox2.Location = new System.Drawing.Point(15, 59);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(18, 18);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 31;
             this.pictureBox2.TabStop = false;
             // 
-            // label1
+            // imgCmbGames
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(38, 59);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
-            this.label1.TabIndex = 30;
-            this.label1.Text = "All hosts";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::DesktopLiveStreamer.Properties.Resources.all_hosts;
-            this.pictureBox1.Location = new System.Drawing.Point(18, 57);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 29;
-            this.pictureBox1.TabStop = false;
+            this.imgCmbGames.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbGames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbGames.FormattingEnabled = true;
+            this.imgCmbGames.Location = new System.Drawing.Point(6, 19);
+            this.imgCmbGames.Name = "imgCmbGames";
+            this.imgCmbGames.Size = new System.Drawing.Size(431, 23);
+            this.imgCmbGames.TabIndex = 28;
             // 
             // progressGames
             // 
@@ -542,38 +515,6 @@
             this.mnuPlayBest.Text = "Play Best Quality";
             this.mnuPlayBest.Click += new System.EventHandler(this.mnuPlayBest_Click);
             // 
-            // imgCmbGames
-            // 
-            this.imgCmbGames.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbGames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbGames.FormattingEnabled = true;
-            this.imgCmbGames.Location = new System.Drawing.Point(6, 19);
-            this.imgCmbGames.Name = "imgCmbGames";
-            this.imgCmbGames.Size = new System.Drawing.Size(431, 23);
-            this.imgCmbGames.TabIndex = 28;
-            // 
-            // imgCmbLiveStreams
-            // 
-            this.imgCmbLiveStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbLiveStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbLiveStreams.FormattingEnabled = true;
-            this.imgCmbLiveStreams.Location = new System.Drawing.Point(6, 21);
-            this.imgCmbLiveStreams.Name = "imgCmbLiveStreams";
-            this.imgCmbLiveStreams.Size = new System.Drawing.Size(396, 23);
-            this.imgCmbLiveStreams.TabIndex = 21;
-            this.imgCmbLiveStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbLiveStreams_SelectedIndexChanged_1);
-            // 
-            // imgCmbStreams
-            // 
-            this.imgCmbStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbStreams.FormattingEnabled = true;
-            this.imgCmbStreams.Location = new System.Drawing.Point(6, 16);
-            this.imgCmbStreams.Name = "imgCmbStreams";
-            this.imgCmbStreams.Size = new System.Drawing.Size(513, 23);
-            this.imgCmbStreams.TabIndex = 22;
-            this.imgCmbStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbStreams_SelectedIndexChanged);
-            // 
             // FrmStreams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -604,9 +545,7 @@
             this.statusStrip1.PerformLayout();
             this.groupGames.ResumeLayout(false);
             this.groupGames.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.contextMenuUpdateGames.ResumeLayout(false);
             this.contextMenuPlayBest.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -648,17 +587,12 @@
         private System.Windows.Forms.ProgressBar progressGames;
         private System.Windows.Forms.Button btnUpdateGames;
         private ImageDropDownList imgCmbGames;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnUpdateGameMenu;
         private System.Windows.Forms.ContextMenuStrip contextMenuUpdateGames;
         private System.Windows.Forms.ToolStripMenuItem mnuUpdateAllGames;
         private System.Windows.Forms.Button btnChangeGame;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnAbout;
         private System.Windows.Forms.Button btnMnuPlayBest;
         private System.Windows.Forms.ContextMenuStrip contextMenuPlayBest;
