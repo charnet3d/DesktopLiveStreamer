@@ -1,7 +1,7 @@
 Desktop Live Streamer
 ===================
 
-An easy to use application that facilitates watching gaming related streams on Windows, right from you desktop.
+An easy to use application that facilitates watching gaming related streams on Windows, right from your desktop.
 
 Current release: **0.9 Beta** (2012-12-23)
 
@@ -9,8 +9,7 @@ Requirements:
 -------------
 
 * Framework .Net version 4.0 (Can be downloaded during installation)
-* VLC Player (x64 version not supported)
-* Administrative rights on Windows Seven 64 Bit
+* Administrative rights on Windows 8 and Windows Seven 64 Bit
 
 Download:
 ---------
