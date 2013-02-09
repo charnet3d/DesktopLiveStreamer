@@ -19,11 +19,11 @@ Download:
 0.9.1 Beta
 http://www.mediafire.com/file/8kqfqht3cu6mdk9/DesktopLiveStreamer-0.9.1-Beta-Win32-Setup.rar
 
-0.9 Beta
-http://www.mediafire.com/file/q74s99vv2is3csx/DesktopLiveStreamer-0.9-Beta-Win32-Setup.rar
-
 
 * Older versions:
+
+0.9 Beta
+http://www.mediafire.com/file/q74s99vv2is3csx/DesktopLiveStreamer-0.9-Beta-Win32-Setup.rar
 
 0.8.2 Beta
 http://www.mediafire.com/file/kvys9vk56px5u18/Desktop_Live_Streamer_0.8.2_Beta_Installer.rar
