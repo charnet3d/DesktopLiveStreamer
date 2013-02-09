@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using System.Security;
 using Microsoft.Win32;
 
+
 namespace DesktopLiveStreamer
 {
     public partial class FrmStreams : Form
@@ -28,7 +29,6 @@ namespace DesktopLiveStreamer
         private Boolean updatingQualities;
         private Boolean checkingFavoritesOnlineStatus;
 
-        private Boolean playBestQuality;
         private Boolean loadAllGames;
         private Boolean currentGameChanged;
 
@@ -150,7 +150,6 @@ namespace DesktopLiveStreamer
             playing = false;
             btnStop.Enabled = false;
             btnPlay.Enabled = false;
-            btnMnuPlayBest.Enabled = false;
             btnOpenBrowser.Enabled = false;
 
             radioList2.Checked = true;
@@ -223,7 +222,6 @@ namespace DesktopLiveStreamer
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            playBestQuality = false;
             playing = true;
 
             Thread playingThread = new Thread(new ThreadStart(playingLoop));
@@ -303,7 +301,6 @@ namespace DesktopLiveStreamer
             
 
             btnPlay.Enabled = true;
-            btnMnuPlayBest.Enabled = true;
             btnStop.Enabled = false;
         }
 
@@ -317,13 +314,11 @@ namespace DesktopLiveStreamer
                 if (imgCmbStreams.Items.Count > 0)
                 {
                     btnPlay.Enabled = true;
-                    btnMnuPlayBest.Enabled = true;
                     btnOpenBrowser.Enabled = true;
                 }
                 else
                 {
                     btnPlay.Enabled = false;
-                    btnMnuPlayBest.Enabled = false;
                     btnOpenBrowser.Enabled = false;
                 }
             }
@@ -337,12 +332,10 @@ namespace DesktopLiveStreamer
                     if (updatingQualities)
                     {
                         btnPlay.Enabled = false;
-                        btnMnuPlayBest.Enabled = false;
                     }
                     else
                     {
                         btnPlay.Enabled = true;
-                        btnMnuPlayBest.Enabled = true;
                     }
 
                     btnOpenBrowser.Enabled = true;
@@ -350,7 +343,6 @@ namespace DesktopLiveStreamer
                 else
                 {
                     btnPlay.Enabled = false;
-                    btnMnuPlayBest.Enabled = false;
                     btnOpenBrowser.Enabled = false;
                 }
             }
@@ -842,8 +834,11 @@ namespace DesktopLiveStreamer
                 if (statusStrip1.InvokeRequired)
                     statusStrip1.Invoke(new MethodInvoker(delegate
                     {
-                        statusLabel.Text = "Ready";
-                        statusLabel.ForeColor = Color.Black;
+                        if (statusLabel.Text == "Updating stream list from Twitch.tv...")
+                        {
+                            statusLabel.Text = "Ready";
+                            statusLabel.ForeColor = Color.Black;
+                        }
                     }));
 
                 if (listLiveStreams.getSize() > 0)
@@ -888,51 +883,6 @@ namespace DesktopLiveStreamer
                     Console.WriteLine(ex.StackTrace);
                 }
             }
-            catch (Newtonsoft.Json.JsonException)
-            {
-                try
-                {
-                    listLiveStreams.sortByViewers();
-
-                    if (imgCmbLiveStreams.InvokeRequired)
-                        imgCmbLiveStreams.Invoke(new MethodInvoker(delegate
-                        {
-                            imgCmbLiveStreams.Items.Clear();
-                            Image img;
-                            for (int i = 0; i < listLiveStreams.getSize(); i++)
-                            {
-                                img = (listLiveStreams[i].Host.Equals("Twitch") ?
-                                        DesktopLiveStreamer.Properties.Resources.twitch :
-                                        DesktopLiveStreamer.Properties.Resources.own3d);
-                                imgCmbLiveStreams.Items.Add(new DropDownItem(listLiveStreams[i].Viewers.ToString() +
-                                                                        " - " + listLiveStreams[i].Caption, img));
-                            }
-                            if (imgCmbLiveStreams.Items.Count > 0)
-                                imgCmbLiveStreams.SelectedIndex = 0;
-                        }));
-
-                    if (statusStrip1.InvokeRequired)
-                        statusStrip1.Invoke(new MethodInvoker(delegate
-                        {
-                            statusLabel.Text = "Ready";
-                            statusLabel.ForeColor = Color.Black;
-                        }));
-
-                    if (qualityCheckProcess != null && !qualityCheckProcess.HasExited)
-                        qualityCheckProcess.Kill();
-                    if (updateQualitiesThread != null)
-                        updateQualitiesThread.Abort();
-                    updateQualitiesThread = new Thread(new ThreadStart(updateQualities));
-                    updateQualitiesThread.Start();
-
-                    updatingLiveStreams = false;
-                }
-                catch (ThreadAbortException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
-                }
-            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -955,7 +905,6 @@ namespace DesktopLiveStreamer
                     if (btnPlay.InvokeRequired)
                         btnPlay.Invoke(new MethodInvoker(delegate {
                             btnPlay.Enabled = true;
-                            btnMnuPlayBest.Enabled = true;
                         }));
 
                     if (btnOpenBrowser.InvokeRequired)
@@ -966,7 +915,6 @@ namespace DesktopLiveStreamer
                     if (btnPlay.InvokeRequired)
                         btnPlay.Invoke(new MethodInvoker(delegate {
                             btnPlay.Enabled = false;
-                            btnMnuPlayBest.Enabled = false;
                         }));
 
                     if (btnOpenBrowser.InvokeRequired)
@@ -988,19 +936,30 @@ namespace DesktopLiveStreamer
             updatingQualities = true;
             try
             {
+                if (cmbQualities.InvokeRequired)
+                        cmbQualities.Invoke(new MethodInvoker(delegate
+                        {
+                            cmbQualities.Items.Clear();
+                            cmbQualities.Items.Add("best");
+                            cmbQualities.Items.Add("worst");
+
+                            cmbQualities.SelectedIndex = 0;
+                        }));
+
+                if (cmbQualities.InvokeRequired)
+                    cmbQualities.Invoke(new MethodInvoker(delegate { cmbQualities.Enabled = true; }));
+
                 if (btnAddLiveStream.InvokeRequired)
-                    btnAddLiveStream.Invoke(new MethodInvoker(delegate { btnAddLiveStream.Enabled = false; }));
+                    btnAddLiveStream.Invoke(new MethodInvoker(delegate { btnAddLiveStream.Enabled = true; }));
+
+                if (btnPlay.InvokeRequired)
+                    btnPlay.Invoke(new MethodInvoker(delegate {
+                        btnPlay.Enabled = true;
+                    }));
 
                 if (btnUpdate.InvokeRequired)
                     btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = false; }));
 
-                if (btnPlay.InvokeRequired)
-                    btnPlay.Invoke(new MethodInvoker(delegate {
-                        btnPlay.Enabled = false;
-                    }));
-
-                if (cmbQualities.InvokeRequired)
-                    cmbQualities.Invoke(new MethodInvoker(delegate { cmbQualities.Enabled = false; }));
 
                 if (statusStrip1.InvokeRequired)
                     statusStrip1.Invoke(new MethodInvoker(delegate
@@ -1044,6 +1003,7 @@ namespace DesktopLiveStreamer
                 {
                     qualities = qualities.Replace("Found streams: ", "");
                     qualities = qualities.Replace(", ", ",");
+                    qualities = qualities.Replace("(worst,best)", "(worst/best)");
 
                     String[] tabQualities;
                     tabQualities = qualities.Split(',');
@@ -1051,14 +1011,17 @@ namespace DesktopLiveStreamer
                     if (cmbQualities.InvokeRequired)
                         cmbQualities.Invoke(new MethodInvoker(delegate
                         {
-                            cmbQualities.Items.Clear();
+                            int ind = cmbQualities.SelectedIndex;
+
+                            if (tabQualities.Length == 1)
+                                tabQualities[0] = tabQualities[0].Replace("(worst/best)", "(worst, best)");
+
                             foreach (String q in tabQualities)
                             {
                                 cmbQualities.Items.Add(q);
                             }
 
-                            if (cmbQualities.Items.Count > 0)
-                                cmbQualities.SelectedIndex = 0;
+                            cmbQualities.SelectedIndex = ind;
                         }));
                 }
             }
@@ -1073,8 +1036,11 @@ namespace DesktopLiveStreamer
                 if (statusStrip1.InvokeRequired)
                     statusStrip1.Invoke(new MethodInvoker(delegate
                     {
-                        statusLabel.Text = "Ready";
-                        statusLabel.ForeColor = Color.Black;
+                        if (statusLabel.Text == "Loading supported qualities for selected stream...")
+                        {
+                            statusLabel.Text = "Ready";
+                            statusLabel.ForeColor = Color.Black;
+                        }
                     }));
 
                 if (progressQuality.InvokeRequired)
@@ -1083,18 +1049,26 @@ namespace DesktopLiveStreamer
                 if (btnUpdate.InvokeRequired)
                     btnUpdate.Invoke(new MethodInvoker(delegate { btnUpdate.Enabled = true; }));
 
-                if (radioList2.Checked)
-                    if (btnPlay.InvokeRequired)
-                        btnPlay.Invoke(new MethodInvoker(delegate {
-                            btnPlay.Enabled = true;
-                        }));
+                if (cmbQualities.InvokeRequired)
+                    cmbQualities.Invoke(new MethodInvoker(delegate
+                    {
+                        if (cmbQualities.Items.Count <= 2)
+                        {
+                            cmbQualities.Items.Clear();
 
-                if (btnAddLiveStream.InvokeRequired)
-                    btnAddLiveStream.Invoke(new MethodInvoker(delegate { btnAddLiveStream.Enabled = true; }));
+                            if (radioList2.Checked)
+                                if (btnPlay.InvokeRequired)
+                                    btnPlay.Invoke(new MethodInvoker(delegate
+                                    {
+                                        btnPlay.Enabled = false;
+                                    }));
 
-                if (cmbQualities.Items.Count > 0)
-                    if (cmbQualities.InvokeRequired)
-                        cmbQualities.Invoke(new MethodInvoker(delegate { cmbQualities.Enabled = true; }));
+                            if (btnAddLiveStream.InvokeRequired)
+                                btnAddLiveStream.Invoke(new MethodInvoker(delegate { btnAddLiveStream.Enabled = false; }));
+
+                            cmbQualities.Enabled = false;
+                        }
+                    }));
             }
             catch (Exception ex)
             {
@@ -1255,13 +1229,17 @@ namespace DesktopLiveStreamer
                             playing = false;
                     }));
 
-                if (playBestQuality)
-                    quality = "best";
-                else
-                    if (cmbQualities.InvokeRequired)
-                        cmbQualities.Invoke(new MethodInvoker(delegate {
-                            quality = (String)cmbQualities.SelectedItem;
-                        }));
+                if (cmbQualities.InvokeRequired)
+                    cmbQualities.Invoke(new MethodInvoker(delegate {
+                        quality = (String)cmbQualities.SelectedItem;
+                    }));
+
+                if (quality.Contains("(best)"))
+                    quality = quality.Replace("(best)", "").Trim();
+                else if (quality.Contains("(worst)"))
+                    quality = quality.Replace("(worst)", "").Trim();
+                else if (quality.Contains("(worst, best)"))
+                    quality = quality.Replace("(worst, best)", "").Trim();
 
             }
             else
@@ -1295,10 +1273,7 @@ namespace DesktopLiveStreamer
                 {
                     caption = listFavoriteStreams[index].Caption;
                     url = listFavoriteStreams[index].StreamUrl;
-                    if (playBestQuality)
-                        quality = "best";
-                    else
-                        quality = listFavoriteStreams[index].Quality;
+                    quality = listFavoriteStreams[index].Quality;
                 }
                     
 
@@ -1328,7 +1303,6 @@ namespace DesktopLiveStreamer
                     if (btnPlay.InvokeRequired)
                         btnPlay.Invoke(new MethodInvoker(delegate {
                             btnPlay.Enabled = false;
-                            btnMnuPlayBest.Enabled = false;
                         }));
 
                     if (btnStop.InvokeRequired)
@@ -1376,8 +1350,9 @@ namespace DesktopLiveStreamer
                                 statusStrip1.Invoke(new MethodInvoker(delegate
                                 {
                                     progressBar.Visible = false;
-                                    statusLabel.Text = "Playing '" + caption.Substring(0, ((caption.Length > 64) ? 64 : caption.Length))
-                                                                            .Replace("\n", "") + "' ...";
+                                    if (caption != null)
+                                        statusLabel.Text = "Playing '" + ((caption != null)?(caption.Substring(0, ((caption.Length > 64) ? 64 : caption.Length))
+                                            .Replace("\n", "")):"") + "' ...";
                                     statusLabel.ForeColor = Color.Green;
                                 }));
                         }
@@ -1395,7 +1370,6 @@ namespace DesktopLiveStreamer
             if (btnPlay.InvokeRequired)
                 btnPlay.Invoke(new MethodInvoker(delegate {
                     btnPlay.Enabled = true;
-                    btnMnuPlayBest.Enabled = true;
                 }));
 
             if (btnStop.InvokeRequired)
@@ -1550,21 +1524,6 @@ namespace DesktopLiveStreamer
             FrmAbout frmAbout = new FrmAbout();
 
             frmAbout.ShowDialog();
-        }
-
-        private void mnuPlayBest_Click(object sender, EventArgs e)
-        {
-            playBestQuality = true;
-            playing = true;
-
-            Thread playingThread = new Thread(new ThreadStart(playingLoop));
-            playingThread.Start();
-        }
-
-        private void btnMnuPlayBest_Click(object sender, EventArgs e)
-        {
-            contextMenuPlayBest.Show(btnMnuPlayBest, new Point(btnMnuPlayBest.Width, btnMnuPlayBest.Height), 
-                        ToolStripDropDownDirection.BelowLeft);
         }
     }
 }

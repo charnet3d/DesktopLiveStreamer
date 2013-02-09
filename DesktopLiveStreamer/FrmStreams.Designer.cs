@@ -37,13 +37,11 @@
             this.groupLive = new System.Windows.Forms.GroupBox();
             this.progressQuality = new System.Windows.Forms.ProgressBar();
             this.progressLiveStreams = new System.Windows.Forms.ProgressBar();
-            this.imgCmbLiveStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.btnAddLiveStream = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.cmbQualities = new System.Windows.Forms.ComboBox();
             this.groupFavorites = new System.Windows.Forms.GroupBox();
             this.progressFavorites = new System.Windows.Forms.ProgressBar();
-            this.imgCmbStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.btnCheckOnline = new System.Windows.Forms.Button();
             this.btnClone = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -61,30 +59,25 @@
             this.groupGames = new System.Windows.Forms.GroupBox();
             this.btnChangeGame = new System.Windows.Forms.Button();
             this.btnUpdateGameMenu = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.imgCmbGames = new DesktopLiveStreamer.ImageDropDownList();
             this.progressGames = new System.Windows.Forms.ProgressBar();
             this.btnValidateGame = new System.Windows.Forms.Button();
             this.contextMenuUpdateGames = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuUpdateAllGames = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAbout = new System.Windows.Forms.Button();
-            this.btnMnuPlayBest = new System.Windows.Forms.Button();
-            this.contextMenuPlayBest = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuPlayBest = new System.Windows.Forms.ToolStripMenuItem();
+            this.imgCmbGames = new DesktopLiveStreamer.ImageDropDownList();
+            this.imgCmbLiveStreams = new DesktopLiveStreamer.ImageDropDownList();
+            this.imgCmbStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.groupBox1.SuspendLayout();
             this.groupLive.SuspendLayout();
             this.groupFavorites.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupGames.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.contextMenuUpdateGames.SuspendLayout();
-            this.contextMenuPlayBest.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnChangeStreamer
             // 
-            this.btnChangeStreamer.Location = new System.Drawing.Point(12, 305);
+            this.btnChangeStreamer.Location = new System.Drawing.Point(12, 258);
             this.btnChangeStreamer.Name = "btnChangeStreamer";
             this.btnChangeStreamer.Size = new System.Drawing.Size(91, 54);
             this.btnChangeStreamer.TabIndex = 0;
@@ -96,9 +89,9 @@
             // btnPlay
             // 
             this.btnPlay.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPlay.Location = new System.Drawing.Point(388, 305);
+            this.btnPlay.Location = new System.Drawing.Point(468, 258);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(98, 54);
+            this.btnPlay.Size = new System.Drawing.Size(107, 54);
             this.btnPlay.TabIndex = 3;
             this.btnPlay.Text = "Play";
             this.btnPlay.UseVisualStyleBackColor = true;
@@ -107,9 +100,9 @@
             // btnStop
             // 
             this.btnStop.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStop.Location = new System.Drawing.Point(510, 305);
+            this.btnStop.Location = new System.Drawing.Point(581, 258);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(98, 54);
+            this.btnStop.Size = new System.Drawing.Size(107, 54);
             this.btnStop.TabIndex = 4;
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -122,9 +115,9 @@
             this.groupBox1.Controls.Add(this.radioList2);
             this.groupBox1.Controls.Add(this.radioList1);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 104);
+            this.groupBox1.Location = new System.Drawing.Point(12, 76);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(596, 176);
+            this.groupBox1.Size = new System.Drawing.Size(676, 176);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Stream lists";
@@ -140,18 +133,18 @@
             this.groupLive.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupLive.Location = new System.Drawing.Point(35, 19);
             this.groupLive.Name = "groupLive";
-            this.groupLive.Size = new System.Drawing.Size(555, 61);
+            this.groupLive.Size = new System.Drawing.Size(635, 61);
             this.groupLive.TabIndex = 18;
             this.groupLive.TabStop = false;
             this.groupLive.Text = "Currently online";
             // 
             // progressQuality
             // 
-            this.progressQuality.Location = new System.Drawing.Point(438, 42);
+            this.progressQuality.Location = new System.Drawing.Point(501, 41);
             this.progressQuality.Margin = new System.Windows.Forms.Padding(1);
             this.progressQuality.MarqueeAnimationSpeed = 20;
             this.progressQuality.Name = "progressQuality";
-            this.progressQuality.Size = new System.Drawing.Size(81, 10);
+            this.progressQuality.Size = new System.Drawing.Size(98, 11);
             this.progressQuality.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressQuality.TabIndex = 25;
             this.progressQuality.Visible = false;
@@ -161,26 +154,15 @@
             this.progressLiveStreams.Location = new System.Drawing.Point(6, 42);
             this.progressLiveStreams.MarqueeAnimationSpeed = 20;
             this.progressLiveStreams.Name = "progressLiveStreams";
-            this.progressLiveStreams.Size = new System.Drawing.Size(396, 10);
+            this.progressLiveStreams.Size = new System.Drawing.Size(459, 10);
             this.progressLiveStreams.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressLiveStreams.TabIndex = 24;
             this.progressLiveStreams.Visible = false;
             // 
-            // imgCmbLiveStreams
-            // 
-            this.imgCmbLiveStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbLiveStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbLiveStreams.FormattingEnabled = true;
-            this.imgCmbLiveStreams.Location = new System.Drawing.Point(6, 21);
-            this.imgCmbLiveStreams.Name = "imgCmbLiveStreams";
-            this.imgCmbLiveStreams.Size = new System.Drawing.Size(396, 23);
-            this.imgCmbLiveStreams.TabIndex = 21;
-            this.imgCmbLiveStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbLiveStreams_SelectedIndexChanged_1);
-            // 
             // btnAddLiveStream
             // 
             this.btnAddLiveStream.Image = global::DesktopLiveStreamer.Properties.Resources.favoriteImg;
-            this.btnAddLiveStream.Location = new System.Drawing.Point(525, 20);
+            this.btnAddLiveStream.Location = new System.Drawing.Point(605, 20);
             this.btnAddLiveStream.Name = "btnAddLiveStream";
             this.btnAddLiveStream.Size = new System.Drawing.Size(24, 23);
             this.btnAddLiveStream.TabIndex = 20;
@@ -191,7 +173,7 @@
             // btnUpdate
             // 
             this.btnUpdate.Image = global::DesktopLiveStreamer.Properties.Resources.refreshImg;
-            this.btnUpdate.Location = new System.Drawing.Point(408, 20);
+            this.btnUpdate.Location = new System.Drawing.Point(471, 19);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(24, 23);
             this.btnUpdate.TabIndex = 19;
@@ -203,9 +185,9 @@
             // 
             this.cmbQualities.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbQualities.FormattingEnabled = true;
-            this.cmbQualities.Location = new System.Drawing.Point(438, 21);
+            this.cmbQualities.Location = new System.Drawing.Point(501, 21);
             this.cmbQualities.Name = "cmbQualities";
-            this.cmbQualities.Size = new System.Drawing.Size(81, 21);
+            this.cmbQualities.Size = new System.Drawing.Size(98, 21);
             this.cmbQualities.TabIndex = 18;
             // 
             // groupFavorites
@@ -220,7 +202,7 @@
             this.groupFavorites.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupFavorites.Location = new System.Drawing.Point(35, 88);
             this.groupFavorites.Name = "groupFavorites";
-            this.groupFavorites.Size = new System.Drawing.Size(555, 80);
+            this.groupFavorites.Size = new System.Drawing.Size(635, 80);
             this.groupFavorites.TabIndex = 17;
             this.groupFavorites.TabStop = false;
             this.groupFavorites.Text = "Favorites";
@@ -229,26 +211,15 @@
             // 
             this.progressFavorites.Location = new System.Drawing.Point(6, 37);
             this.progressFavorites.Name = "progressFavorites";
-            this.progressFavorites.Size = new System.Drawing.Size(513, 10);
+            this.progressFavorites.Size = new System.Drawing.Size(593, 10);
             this.progressFavorites.Step = 1;
             this.progressFavorites.TabIndex = 23;
             this.progressFavorites.Visible = false;
             // 
-            // imgCmbStreams
-            // 
-            this.imgCmbStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbStreams.FormattingEnabled = true;
-            this.imgCmbStreams.Location = new System.Drawing.Point(6, 16);
-            this.imgCmbStreams.Name = "imgCmbStreams";
-            this.imgCmbStreams.Size = new System.Drawing.Size(513, 23);
-            this.imgCmbStreams.TabIndex = 22;
-            this.imgCmbStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbStreams_SelectedIndexChanged);
-            // 
             // btnCheckOnline
             // 
             this.btnCheckOnline.Image = global::DesktopLiveStreamer.Properties.Resources.refreshImg;
-            this.btnCheckOnline.Location = new System.Drawing.Point(525, 16);
+            this.btnCheckOnline.Location = new System.Drawing.Point(605, 16);
             this.btnCheckOnline.Name = "btnCheckOnline";
             this.btnCheckOnline.Size = new System.Drawing.Size(24, 23);
             this.btnCheckOnline.TabIndex = 20;
@@ -322,9 +293,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel,
             this.progressBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 362);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 318);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(620, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(700, 22);
             this.statusStrip1.TabIndex = 12;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -349,7 +320,7 @@
             // btnChangeVLC
             // 
             this.btnChangeVLC.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChangeVLC.Location = new System.Drawing.Point(109, 305);
+            this.btnChangeVLC.Location = new System.Drawing.Point(109, 258);
             this.btnChangeVLC.Name = "btnChangeVLC";
             this.btnChangeVLC.Size = new System.Drawing.Size(98, 54);
             this.btnChangeVLC.TabIndex = 13;
@@ -360,7 +331,7 @@
             // btnUpdateGames
             // 
             this.btnUpdateGames.Image = global::DesktopLiveStreamer.Properties.Resources.refreshImg;
-            this.btnUpdateGames.Location = new System.Drawing.Point(443, 19);
+            this.btnUpdateGames.Location = new System.Drawing.Point(536, 19);
             this.btnUpdateGames.Name = "btnUpdateGames";
             this.btnUpdateGames.Size = new System.Drawing.Size(24, 23);
             this.btnUpdateGames.TabIndex = 19;
@@ -371,7 +342,7 @@
             // btnOpenBrowser
             // 
             this.btnOpenBrowser.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpenBrowser.Location = new System.Drawing.Point(274, 305);
+            this.btnOpenBrowser.Location = new System.Drawing.Point(354, 258);
             this.btnOpenBrowser.Name = "btnOpenBrowser";
             this.btnOpenBrowser.Size = new System.Drawing.Size(108, 54);
             this.btnOpenBrowser.TabIndex = 14;
@@ -384,22 +355,20 @@
             this.groupGames.Controls.Add(this.btnChangeGame);
             this.groupGames.Controls.Add(this.btnUpdateGames);
             this.groupGames.Controls.Add(this.btnUpdateGameMenu);
-            this.groupGames.Controls.Add(this.label2);
-            this.groupGames.Controls.Add(this.pictureBox2);
             this.groupGames.Controls.Add(this.imgCmbGames);
             this.groupGames.Controls.Add(this.progressGames);
             this.groupGames.Controls.Add(this.btnValidateGame);
             this.groupGames.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupGames.Location = new System.Drawing.Point(12, 12);
             this.groupGames.Name = "groupGames";
-            this.groupGames.Size = new System.Drawing.Size(596, 86);
+            this.groupGames.Size = new System.Drawing.Size(676, 58);
             this.groupGames.TabIndex = 21;
             this.groupGames.TabStop = false;
             this.groupGames.Text = "Live Game to Watch :";
             // 
             // btnChangeGame
             // 
-            this.btnChangeGame.Location = new System.Drawing.Point(498, 19);
+            this.btnChangeGame.Location = new System.Drawing.Point(584, 19);
             this.btnChangeGame.Name = "btnChangeGame";
             this.btnChangeGame.Size = new System.Drawing.Size(86, 23);
             this.btnChangeGame.TabIndex = 27;
@@ -410,55 +379,26 @@
             // btnUpdateGameMenu
             // 
             this.btnUpdateGameMenu.Image = global::DesktopLiveStreamer.Properties.Resources.arrow;
-            this.btnUpdateGameMenu.Location = new System.Drawing.Point(466, 19);
+            this.btnUpdateGameMenu.Location = new System.Drawing.Point(559, 19);
             this.btnUpdateGameMenu.Name = "btnUpdateGameMenu";
             this.btnUpdateGameMenu.Size = new System.Drawing.Size(19, 23);
             this.btnUpdateGameMenu.TabIndex = 35;
             this.btnUpdateGameMenu.UseVisualStyleBackColor = true;
             this.btnUpdateGameMenu.Click += new System.EventHandler(this.btnUpdateGameMenu_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(35, 61);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 13);
-            this.label2.TabIndex = 32;
-            this.label2.Text = "Twitch only";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::DesktopLiveStreamer.Properties.Resources.twitch;
-            this.pictureBox2.Location = new System.Drawing.Point(15, 59);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 31;
-            this.pictureBox2.TabStop = false;
-            // 
-            // imgCmbGames
-            // 
-            this.imgCmbGames.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbGames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbGames.FormattingEnabled = true;
-            this.imgCmbGames.Location = new System.Drawing.Point(6, 19);
-            this.imgCmbGames.Name = "imgCmbGames";
-            this.imgCmbGames.Size = new System.Drawing.Size(431, 23);
-            this.imgCmbGames.TabIndex = 28;
-            // 
             // progressGames
             // 
             this.progressGames.Location = new System.Drawing.Point(6, 40);
             this.progressGames.MarqueeAnimationSpeed = 20;
             this.progressGames.Name = "progressGames";
-            this.progressGames.Size = new System.Drawing.Size(431, 10);
+            this.progressGames.Size = new System.Drawing.Size(524, 10);
             this.progressGames.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressGames.TabIndex = 24;
             this.progressGames.Visible = false;
             // 
             // btnValidateGame
             // 
-            this.btnValidateGame.Location = new System.Drawing.Point(498, 19);
+            this.btnValidateGame.Location = new System.Drawing.Point(584, 19);
             this.btnValidateGame.Name = "btnValidateGame";
             this.btnValidateGame.Size = new System.Drawing.Size(86, 23);
             this.btnValidateGame.TabIndex = 27;
@@ -483,7 +423,7 @@
             // btnAbout
             // 
             this.btnAbout.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAbout.Location = new System.Drawing.Point(12, 305);
+            this.btnAbout.Location = new System.Drawing.Point(12, 258);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(91, 54);
             this.btnAbout.TabIndex = 22;
@@ -491,36 +431,43 @@
             this.btnAbout.UseVisualStyleBackColor = true;
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
             // 
-            // btnMnuPlayBest
+            // imgCmbGames
             // 
-            this.btnMnuPlayBest.Image = global::DesktopLiveStreamer.Properties.Resources.arrow;
-            this.btnMnuPlayBest.Location = new System.Drawing.Point(485, 305);
-            this.btnMnuPlayBest.Name = "btnMnuPlayBest";
-            this.btnMnuPlayBest.Size = new System.Drawing.Size(19, 54);
-            this.btnMnuPlayBest.TabIndex = 36;
-            this.btnMnuPlayBest.UseVisualStyleBackColor = true;
-            this.btnMnuPlayBest.Click += new System.EventHandler(this.btnMnuPlayBest_Click);
+            this.imgCmbGames.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbGames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbGames.FormattingEnabled = true;
+            this.imgCmbGames.Location = new System.Drawing.Point(6, 19);
+            this.imgCmbGames.Name = "imgCmbGames";
+            this.imgCmbGames.Size = new System.Drawing.Size(524, 23);
+            this.imgCmbGames.TabIndex = 28;
             // 
-            // contextMenuPlayBest
+            // imgCmbLiveStreams
             // 
-            this.contextMenuPlayBest.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuPlayBest});
-            this.contextMenuPlayBest.Name = "mnuUpdateGames";
-            this.contextMenuPlayBest.Size = new System.Drawing.Size(163, 26);
+            this.imgCmbLiveStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbLiveStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbLiveStreams.FormattingEnabled = true;
+            this.imgCmbLiveStreams.Location = new System.Drawing.Point(6, 20);
+            this.imgCmbLiveStreams.Name = "imgCmbLiveStreams";
+            this.imgCmbLiveStreams.Size = new System.Drawing.Size(459, 23);
+            this.imgCmbLiveStreams.TabIndex = 21;
+            this.imgCmbLiveStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbLiveStreams_SelectedIndexChanged_1);
             // 
-            // mnuPlayBest
+            // imgCmbStreams
             // 
-            this.mnuPlayBest.Name = "mnuPlayBest";
-            this.mnuPlayBest.Size = new System.Drawing.Size(162, 22);
-            this.mnuPlayBest.Text = "Play Best Quality";
-            this.mnuPlayBest.Click += new System.EventHandler(this.mnuPlayBest_Click);
+            this.imgCmbStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbStreams.FormattingEnabled = true;
+            this.imgCmbStreams.Location = new System.Drawing.Point(6, 16);
+            this.imgCmbStreams.Name = "imgCmbStreams";
+            this.imgCmbStreams.Size = new System.Drawing.Size(593, 23);
+            this.imgCmbStreams.TabIndex = 22;
+            this.imgCmbStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbStreams_SelectedIndexChanged);
             // 
             // FrmStreams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 384);
-            this.Controls.Add(this.btnMnuPlayBest);
+            this.ClientSize = new System.Drawing.Size(700, 340);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.groupGames);
             this.Controls.Add(this.btnOpenBrowser);
@@ -544,10 +491,7 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.groupGames.ResumeLayout(false);
-            this.groupGames.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.contextMenuUpdateGames.ResumeLayout(false);
-            this.contextMenuPlayBest.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -587,16 +531,11 @@
         private System.Windows.Forms.ProgressBar progressGames;
         private System.Windows.Forms.Button btnUpdateGames;
         private ImageDropDownList imgCmbGames;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button btnUpdateGameMenu;
         private System.Windows.Forms.ContextMenuStrip contextMenuUpdateGames;
         private System.Windows.Forms.ToolStripMenuItem mnuUpdateAllGames;
         private System.Windows.Forms.Button btnChangeGame;
         private System.Windows.Forms.Button btnAbout;
-        private System.Windows.Forms.Button btnMnuPlayBest;
-        private System.Windows.Forms.ContextMenuStrip contextMenuPlayBest;
-        private System.Windows.Forms.ToolStripMenuItem mnuPlayBest;
     }
 }
 

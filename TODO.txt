@@ -4,3 +4,5 @@
 + put on GitHub
 + a link opening the livestream in the browser to support the streamers
 - further testing of a bug where a stream doesn't launch after clicking on play (must be some bug with livestreamer)
+- Include stream name
+- Ability to subscribe/follow a channel in twitch
