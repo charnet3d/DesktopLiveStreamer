@@ -38,6 +38,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.linkDLS = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -96,7 +98,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(170, 132);
+            this.label1.Location = new System.Drawing.Point(170, 174);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 17);
             this.label1.TabIndex = 5;
@@ -105,7 +107,7 @@
             // linkLiveStreamer
             // 
             this.linkLiveStreamer.AutoSize = true;
-            this.linkLiveStreamer.Location = new System.Drawing.Point(181, 197);
+            this.linkLiveStreamer.Location = new System.Drawing.Point(194, 239);
             this.linkLiveStreamer.Name = "linkLiveStreamer";
             this.linkLiveStreamer.Size = new System.Drawing.Size(196, 13);
             this.linkLiveStreamer.TabIndex = 6;
@@ -117,7 +119,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(181, 155);
+            this.label2.Location = new System.Drawing.Point(194, 197);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(173, 34);
             this.label2.TabIndex = 4;
@@ -144,11 +146,33 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "Source code:";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(194, 149);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 17);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Tarik Irhboula";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(170, 132);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(84, 17);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Icon Art By :";
+            // 
             // FrmAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(445, 232);
+            this.ClientSize = new System.Drawing.Size(445, 270);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.linkDLS);
             this.Controls.Add(this.linkLiveStreamer);
@@ -182,5 +206,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel linkDLS;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
