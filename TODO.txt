@@ -5,10 +5,12 @@
 + a link opening the livestream in the browser to support the streamers
 + further testing of a bug where a stream doesn't launch after clicking on play (must be some bug with livestreamer)
 
-- fix an exception that occurs when you already have a stream list loaded, you change the current game and click OK, the stream list starts loading but you click play, normally play button should be disabled in this case
++ fix an exception that occurs when you already have a stream list loaded, you change the current game and click OK, the stream list starts loading but you click play, normally play button should be disabled in this case
 
-- fix an unexpected behavior for when VLC is set manually at the startup of the application
+- fix an unexpected behavior for when VLC executable is set manually at the startup of the application
 
 - Include stream name
 
 - Ability to subscribe/follow a channel in twitch
+
+- if a quality has been chosen, and we change the stream we check if the previous prefered quality is available so we activate it by default.

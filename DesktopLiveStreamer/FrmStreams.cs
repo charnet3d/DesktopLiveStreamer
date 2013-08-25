@@ -19,6 +19,8 @@ namespace DesktopLiveStreamer
 {
     public partial class FrmStreams : Form
     {
+        String qualities = "";
+
         private ListGames listGames;
         private ListStreams listFavoriteStreams;
         private ListStreams listLiveStreams;
@@ -235,8 +237,8 @@ namespace DesktopLiveStreamer
             
             //String streamerOutput = ((Process)sendingProcess).StandardError.ReadLine();
 
-
-            Console.WriteLine(outLine.Data);
+            Debug.Write(outLine.Data);
+            //Console.WriteLine(outLine.Data);
                 
         }
 
@@ -979,6 +981,7 @@ namespace DesktopLiveStreamer
                 startInfo.CreateNoWindow = true;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
                 startInfo.FileName = XMLPersist.LiveStreamerExecutable;
 
                 int index = 0;
@@ -991,14 +994,18 @@ namespace DesktopLiveStreamer
                 startInfo.Arguments = url + " --rtmpdump \"Livestreamer\\rtmpdump\\rtmpdump.exe\"";
                 qualityCheckProcess = Process.Start(startInfo);
 
-                String qualities = "";
+                qualityCheckProcess.ErrorDataReceived += QualitiesProcess_OutputDataReceived;
+                qualityCheckProcess.OutputDataReceived += QualitiesProcess_OutputDataReceived;
 
-                // Ignore first line of output
-                qualityCheckProcess.StandardOutput.ReadLine();
+                qualityCheckProcess.BeginErrorReadLine();
+                qualityCheckProcess.BeginOutputReadLine();
 
-                // Take the line where supported qualities are output
-                qualities = qualityCheckProcess.StandardOutput.ReadLine();
-
+                while (qualities == null || !qualities.StartsWith("Found streams: ") || !qualityCheckProcess.HasExited)
+                {
+                    // Ignore meaningless lines of output
+                    // And take only the line where supported qualities are output
+                }
+                
                 if (qualities != null && qualities.StartsWith("Found streams: "))
                 {
                     qualities = qualities.Replace("Found streams: ", "");
@@ -1079,6 +1086,12 @@ namespace DesktopLiveStreamer
             updatingQualities = false;
         }
 
+        private void QualitiesProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            qualities = e.Data;
+            Debug.Print(qualities);
+        }
+
 
         /// <summary>
         /// /////////////////////////////////// CHECKING ONLINE STATUS
@@ -1115,7 +1128,10 @@ namespace DesktopLiveStreamer
             {
                 String streamUrl = listFavoriteStreams[i].StreamUrl;
                 String[] parts = streamUrl.Split('/');
-                String channel = parts[parts.Length - 1];
+                String channel = "";
+                int j = parts.Length - 1;
+                while ((channel = parts[j]) == "" && j > 0)
+                    j--;
 
                 String responseString = "";
                 string url = "";
@@ -1259,9 +1275,10 @@ namespace DesktopLiveStreamer
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                //startInfo.UseShellExecute = false;
-                //startInfo.CreateNoWindow = true;
-                //startInfo.RedirectStandardOutput = true;
+                startInfo.CreateNoWindow = true;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
                 startInfo.FileName = XMLPersist.LiveStreamerExecutable;
 
                 if (live)
@@ -1292,11 +1309,11 @@ namespace DesktopLiveStreamer
 
                 //String streamerOutput = "";
                 //int lineCount = 0;
-
+                
                 //liveStreamerProcess.BeginOutputReadLine();
 
-                //liveStreamerProcess.OutputDataReceived += new DataReceivedEventHandler(liveStreamerProcess_OuputDataReceived);
-
+                //liveStreamerProcess.OutputDataReceived += liveStreamerProcess_OuputDataReceived;
+                //liveStreamerProcess.ErrorDataReceived += liveStreamerProcess_OuputDataReceived;
 
                 while (!liveStreamerProcess.HasExited)
                 {
@@ -1507,6 +1524,9 @@ namespace DesktopLiveStreamer
                     updateLiveStreamsThread.Abort();
                 updateLiveStreamsThread = new Thread(new ThreadStart(updateLiveStreams));
                 updateLiveStreamsThread.Start();
+
+                btnPlay.Enabled = false;
+                btnOpenBrowser.Enabled = false;
             }
         }
 

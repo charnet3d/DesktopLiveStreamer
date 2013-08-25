@@ -1,3 +1,12 @@
+Version 0.9.3
+-------------
+
+* Updated Livestreamer to version 1.5.1. And added a fix for the qualities list that wasn't being loaded.
+
+* Fixed a bug that happened when checking for the availability of favourite streams, wrong results where reported when the URL ended with a / (slash)
+
+* Fixed an exception that occurs when you already have a stream list loaded, you change the current game and click OK. 'Play' button should have been disabled
+
 Version 0.9.2
 -------------
 
