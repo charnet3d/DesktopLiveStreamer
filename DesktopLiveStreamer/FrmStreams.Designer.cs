@@ -37,11 +37,13 @@
             this.groupLive = new System.Windows.Forms.GroupBox();
             this.progressQuality = new System.Windows.Forms.ProgressBar();
             this.progressLiveStreams = new System.Windows.Forms.ProgressBar();
+            this.imgCmbLiveStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.btnAddLiveStream = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.cmbQualities = new System.Windows.Forms.ComboBox();
             this.groupFavorites = new System.Windows.Forms.GroupBox();
             this.progressFavorites = new System.Windows.Forms.ProgressBar();
+            this.imgCmbStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.btnCheckOnline = new System.Windows.Forms.Button();
             this.btnClone = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -59,14 +61,12 @@
             this.groupGames = new System.Windows.Forms.GroupBox();
             this.btnChangeGame = new System.Windows.Forms.Button();
             this.btnUpdateGameMenu = new System.Windows.Forms.Button();
+            this.imgCmbGames = new DesktopLiveStreamer.ImageDropDownList();
             this.progressGames = new System.Windows.Forms.ProgressBar();
             this.btnValidateGame = new System.Windows.Forms.Button();
             this.contextMenuUpdateGames = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuUpdateAllGames = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAbout = new System.Windows.Forms.Button();
-            this.imgCmbGames = new DesktopLiveStreamer.ImageDropDownList();
-            this.imgCmbLiveStreams = new DesktopLiveStreamer.ImageDropDownList();
-            this.imgCmbStreams = new DesktopLiveStreamer.ImageDropDownList();
             this.groupBox1.SuspendLayout();
             this.groupLive.SuspendLayout();
             this.groupFavorites.SuspendLayout();
@@ -159,6 +159,17 @@
             this.progressLiveStreams.TabIndex = 24;
             this.progressLiveStreams.Visible = false;
             // 
+            // imgCmbLiveStreams
+            // 
+            this.imgCmbLiveStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbLiveStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbLiveStreams.FormattingEnabled = true;
+            this.imgCmbLiveStreams.Location = new System.Drawing.Point(6, 20);
+            this.imgCmbLiveStreams.Name = "imgCmbLiveStreams";
+            this.imgCmbLiveStreams.Size = new System.Drawing.Size(459, 23);
+            this.imgCmbLiveStreams.TabIndex = 21;
+            this.imgCmbLiveStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbLiveStreams_SelectedIndexChanged_1);
+            // 
             // btnAddLiveStream
             // 
             this.btnAddLiveStream.Image = global::DesktopLiveStreamer.Properties.Resources.favoriteImg;
@@ -189,6 +200,7 @@
             this.cmbQualities.Name = "cmbQualities";
             this.cmbQualities.Size = new System.Drawing.Size(98, 21);
             this.cmbQualities.TabIndex = 18;
+            this.cmbQualities.SelectedIndexChanged += new System.EventHandler(this.cmbQualities_SelectedIndexChanged);
             // 
             // groupFavorites
             // 
@@ -215,6 +227,17 @@
             this.progressFavorites.Step = 1;
             this.progressFavorites.TabIndex = 23;
             this.progressFavorites.Visible = false;
+            // 
+            // imgCmbStreams
+            // 
+            this.imgCmbStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbStreams.FormattingEnabled = true;
+            this.imgCmbStreams.Location = new System.Drawing.Point(6, 16);
+            this.imgCmbStreams.Name = "imgCmbStreams";
+            this.imgCmbStreams.Size = new System.Drawing.Size(593, 23);
+            this.imgCmbStreams.TabIndex = 22;
+            this.imgCmbStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbStreams_SelectedIndexChanged);
             // 
             // btnCheckOnline
             // 
@@ -386,6 +409,16 @@
             this.btnUpdateGameMenu.UseVisualStyleBackColor = true;
             this.btnUpdateGameMenu.Click += new System.EventHandler(this.btnUpdateGameMenu_Click);
             // 
+            // imgCmbGames
+            // 
+            this.imgCmbGames.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imgCmbGames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imgCmbGames.FormattingEnabled = true;
+            this.imgCmbGames.Location = new System.Drawing.Point(6, 19);
+            this.imgCmbGames.Name = "imgCmbGames";
+            this.imgCmbGames.Size = new System.Drawing.Size(524, 23);
+            this.imgCmbGames.TabIndex = 28;
+            // 
             // progressGames
             // 
             this.progressGames.Location = new System.Drawing.Point(6, 40);
@@ -430,38 +463,6 @@
             this.btnAbout.Text = "About";
             this.btnAbout.UseVisualStyleBackColor = true;
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
-            // 
-            // imgCmbGames
-            // 
-            this.imgCmbGames.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbGames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbGames.FormattingEnabled = true;
-            this.imgCmbGames.Location = new System.Drawing.Point(6, 19);
-            this.imgCmbGames.Name = "imgCmbGames";
-            this.imgCmbGames.Size = new System.Drawing.Size(524, 23);
-            this.imgCmbGames.TabIndex = 28;
-            // 
-            // imgCmbLiveStreams
-            // 
-            this.imgCmbLiveStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbLiveStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbLiveStreams.FormattingEnabled = true;
-            this.imgCmbLiveStreams.Location = new System.Drawing.Point(6, 20);
-            this.imgCmbLiveStreams.Name = "imgCmbLiveStreams";
-            this.imgCmbLiveStreams.Size = new System.Drawing.Size(459, 23);
-            this.imgCmbLiveStreams.TabIndex = 21;
-            this.imgCmbLiveStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbLiveStreams_SelectedIndexChanged_1);
-            // 
-            // imgCmbStreams
-            // 
-            this.imgCmbStreams.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imgCmbStreams.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imgCmbStreams.FormattingEnabled = true;
-            this.imgCmbStreams.Location = new System.Drawing.Point(6, 16);
-            this.imgCmbStreams.Name = "imgCmbStreams";
-            this.imgCmbStreams.Size = new System.Drawing.Size(593, 23);
-            this.imgCmbStreams.TabIndex = 22;
-            this.imgCmbStreams.SelectedIndexChanged += new System.EventHandler(this.imgCmbStreams_SelectedIndexChanged);
             // 
             // FrmStreams
             // 

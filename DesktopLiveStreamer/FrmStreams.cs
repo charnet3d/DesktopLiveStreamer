@@ -31,6 +31,8 @@ namespace DesktopLiveStreamer
         private Boolean updatingQualities;
         private Boolean checkingFavoritesOnlineStatus;
 
+        private Boolean fireSelectedQualityEvent;
+
         private Boolean loadAllGames;
         private Boolean currentGameChanged;
 
@@ -938,6 +940,7 @@ namespace DesktopLiveStreamer
             updatingQualities = true;
             try
             {
+                fireSelectedQualityEvent = false;
                 if (cmbQualities.InvokeRequired)
                         cmbQualities.Invoke(new MethodInvoker(delegate
                         {
@@ -946,7 +949,15 @@ namespace DesktopLiveStreamer
                             cmbQualities.Items.Add("worst");
 
                             cmbQualities.SelectedIndex = 0;
+
+                            // Setting the prefered quality if it exists
+                            if (XMLPersist.PreferedQuality != null && XMLPersist.PreferedQuality == "worst")
+                            {
+                                cmbQualities.SelectedIndex = 1;
+                            }
                         }));
+
+                fireSelectedQualityEvent = true;
 
                 if (cmbQualities.InvokeRequired)
                     cmbQualities.Invoke(new MethodInvoker(delegate { cmbQualities.Enabled = true; }));
@@ -1000,25 +1011,29 @@ namespace DesktopLiveStreamer
                 qualityCheckProcess.BeginErrorReadLine();
                 qualityCheckProcess.BeginOutputReadLine();
 
-                while (qualities == null || !qualities.StartsWith("Found streams: ") || !qualityCheckProcess.HasExited)
+                while (qualities == null || !qualities.StartsWith("Available streams: ") || !qualityCheckProcess.HasExited)
                 {
                     // Ignore meaningless lines of output
                     // And take only the line where supported qualities are output
                 }
-                
-                if (qualities != null && qualities.StartsWith("Found streams: "))
+
+                if (qualities != null && qualities.StartsWith("Available streams: "))
                 {
-                    qualities = qualities.Replace("Found streams: ", "");
+                    qualities = qualities.Replace("Available streams: ", "");
                     qualities = qualities.Replace(", ", ",");
                     qualities = qualities.Replace("(worst,best)", "(worst/best)");
 
                     String[] tabQualities;
                     tabQualities = qualities.Split(',');
 
+                    int ind = 0;
+
                     if (cmbQualities.InvokeRequired)
                         cmbQualities.Invoke(new MethodInvoker(delegate
                         {
-                            int ind = cmbQualities.SelectedIndex;
+                            fireSelectedQualityEvent = false;
+
+                            ind = cmbQualities.SelectedIndex;
 
                             if (tabQualities.Length == 1)
                                 tabQualities[0] = tabQualities[0].Replace("(worst/best)", "(worst, best)");
@@ -1029,6 +1044,18 @@ namespace DesktopLiveStreamer
                             }
 
                             cmbQualities.SelectedIndex = ind;
+
+                            // Setting the prefered quality if it exists
+                            if (XMLPersist.PreferedQuality != null)
+                            {
+                                int i = cmbQualities.FindString(XMLPersist.PreferedQuality);
+                                if (i != -1)
+                                {
+                                    cmbQualities.SelectedIndex = i;
+                                }
+                            }
+
+                            fireSelectedQualityEvent = true;
                         }));
                 }
             }
@@ -1088,8 +1115,9 @@ namespace DesktopLiveStreamer
 
         private void QualitiesProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            qualities = e.Data;
-            Debug.Print(qualities);
+            if (e.Data != null && e.Data.Trim() != "")
+                qualities = e.Data;
+            Debug.Print(e.Data);
         }
 
 
@@ -1544,6 +1572,34 @@ namespace DesktopLiveStreamer
             FrmAbout frmAbout = new FrmAbout();
 
             frmAbout.ShowDialog();
+        }
+
+        private void cmbQualities_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fireSelectedQualityEvent)
+            {
+                // Saving the prefered quality in the settings file
+                String quality = (String)cmbQualities.SelectedItem;
+
+                try
+                {
+                    if (quality.Contains("(best)"))
+                        quality = quality.Replace("(best)", "").Trim();
+                    else if (quality.Contains("(worst)"))
+                        quality = quality.Replace("(worst)", "").Trim();
+                    else if (quality.Contains("(worst, best)"))
+                        quality = quality.Replace("(worst, best)", "").Trim();
+
+                    XMLPersist.PreferedQuality = quality;
+                    XMLPersist.saveStreamListConfig(listFavoriteStreams);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(this, "Error: Unable to save the configuration. Check if you have write " +
+                                "permissions on the directory of the application.\n" +
+                                "Desktop Live Streamer may require administrative rights on some systems.", "Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

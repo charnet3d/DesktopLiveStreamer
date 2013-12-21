@@ -10,6 +10,7 @@ namespace DesktopLiveStreamer
     {
         public static String LiveStreamerExecutable;
         public static String VLCExecutable;
+        public static String PreferedQuality;
         public static String DefaultGame;
 
         public static String StreamXMLFile;
@@ -71,6 +72,11 @@ namespace DesktopLiveStreamer
                         xr.Read();
                         VLCExecutable = xr.Value.Trim();
                     }
+                    else if (xr.NodeType == XmlNodeType.Element && xr.Name == "PreferedQuality")
+                    {
+                        xr.Read();
+                        PreferedQuality = xr.Value.Trim();
+                    }
                 }
             }
             catch (Exception ex)
@@ -102,6 +108,9 @@ namespace DesktopLiveStreamer
 
                 // Le parametre de chemin de VLC
                 xw.WriteElementString("VLCExecutable", VLCExecutable);
+
+                // Le parametre de la qualité préferée
+                xw.WriteElementString("PreferedQuality", PreferedQuality);
 
                 for (int i = 0; i < list.getSize(); i++)
                 {

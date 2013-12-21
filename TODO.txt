@@ -7,10 +7,12 @@
 
 + fix an exception that occurs when you already have a stream list loaded, you change the current game and click OK, the stream list starts loading but you click play, normally play button should be disabled in this case
 
++ if a quality has been chosen, and we change the stream we check if the previous prefered quality is available so we activate it by default.
+
 - fix an unexpected behavior for when VLC executable is set manually at the startup of the application
 
 - Include stream name
 
 - Ability to subscribe/follow a channel in twitch
 
-- if a quality has been chosen, and we change the stream we check if the previous prefered quality is available so we activate it by default.
+- put a condition on Checking of online status, to bypass any non-twitch streams. Possible improvement would be to try to implement an online check for each of the supported streaming services.
