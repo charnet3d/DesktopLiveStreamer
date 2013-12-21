@@ -1,3 +1,12 @@
+Version 0.9.4
+-------------
+
+* Updated Livestreamer to version 1.7.2. And added a fix to adapt to the changed output of the list of qualities from Livestreamer.
+
+* Fixed a bug that made qualities not load appropriately sometimes.
+
+* Now the last used quality will be saved, and selected everytime a new stream is selected.
+
 Version 0.9.3
 -------------
 
