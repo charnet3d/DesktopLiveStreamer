@@ -3,7 +3,7 @@ Desktop Live Streamer
 
 An easy to use application that facilitates watching gaming related streams on Windows, right from your desktop.
 
-Current release: **0.9.3 Beta** (2013-08-25)
+Current release: **0.9.4 Beta** (2013-12-21)
 
 Requirements:
 -------------
@@ -16,10 +16,14 @@ Download:
 
 * Latest release:
 
-0.9.3 Beta
-http://www.mediafire.com/download/k8g43dicei20e2l/DesktopLiveStreamer-0.9.3-Beta-Win32-Setup.rar
+0.9.4 Beta
+http://www.mediafire.com/download/9e2jn2nvazo7r4h/DesktopLiveStreamer-0.9.4-Beta-Win32-Setup.rar
+
 
 * Older versions:
+
+0.9.3 Beta
+http://www.mediafire.com/download/k8g43dicei20e2l/DesktopLiveStreamer-0.9.3-Beta-Win32-Setup.rar
 
 0.9.2 Beta
 http://www.mediafire.com/file/uw3u2meqs0q9lv5/DesktopLiveStreamer-0.9.2-Beta-Win32-Setup.rar
