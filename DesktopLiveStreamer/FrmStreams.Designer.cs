@@ -67,6 +67,9 @@
             this.contextMenuUpdateGames = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuUpdateAllGames = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAbout = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupLive.SuspendLayout();
             this.groupFavorites.SuspendLayout();
@@ -77,9 +80,9 @@
             // 
             // btnChangeStreamer
             // 
-            this.btnChangeStreamer.Location = new System.Drawing.Point(12, 258);
+            this.btnChangeStreamer.Location = new System.Drawing.Point(68, 258);
             this.btnChangeStreamer.Name = "btnChangeStreamer";
-            this.btnChangeStreamer.Size = new System.Drawing.Size(91, 54);
+            this.btnChangeStreamer.Size = new System.Drawing.Size(76, 54);
             this.btnChangeStreamer.TabIndex = 0;
             this.btnChangeStreamer.Text = "Configure Live Streamer Executable";
             this.btnChangeStreamer.UseVisualStyleBackColor = true;
@@ -89,9 +92,9 @@
             // btnPlay
             // 
             this.btnPlay.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPlay.Location = new System.Drawing.Point(468, 258);
+            this.btnPlay.Location = new System.Drawing.Point(548, 258);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(107, 54);
+            this.btnPlay.Size = new System.Drawing.Size(65, 54);
             this.btnPlay.TabIndex = 3;
             this.btnPlay.Text = "Play";
             this.btnPlay.UseVisualStyleBackColor = true;
@@ -100,9 +103,9 @@
             // btnStop
             // 
             this.btnStop.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStop.Location = new System.Drawing.Point(581, 258);
+            this.btnStop.Location = new System.Drawing.Point(616, 258);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(107, 54);
+            this.btnStop.Size = new System.Drawing.Size(66, 54);
             this.btnStop.TabIndex = 4;
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -343,9 +346,9 @@
             // btnChangeVLC
             // 
             this.btnChangeVLC.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChangeVLC.Location = new System.Drawing.Point(109, 258);
+            this.btnChangeVLC.Location = new System.Drawing.Point(150, 258);
             this.btnChangeVLC.Name = "btnChangeVLC";
-            this.btnChangeVLC.Size = new System.Drawing.Size(98, 54);
+            this.btnChangeVLC.Size = new System.Drawing.Size(76, 54);
             this.btnChangeVLC.TabIndex = 13;
             this.btnChangeVLC.Text = "Configure VLC Executable";
             this.btnChangeVLC.UseVisualStyleBackColor = true;
@@ -365,9 +368,9 @@
             // btnOpenBrowser
             // 
             this.btnOpenBrowser.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpenBrowser.Location = new System.Drawing.Point(354, 258);
+            this.btnOpenBrowser.Location = new System.Drawing.Point(471, 258);
             this.btnOpenBrowser.Name = "btnOpenBrowser";
-            this.btnOpenBrowser.Size = new System.Drawing.Size(108, 54);
+            this.btnOpenBrowser.Size = new System.Drawing.Size(71, 54);
             this.btnOpenBrowser.TabIndex = 14;
             this.btnOpenBrowser.Text = "Open in Browser";
             this.btnOpenBrowser.UseVisualStyleBackColor = true;
@@ -444,12 +447,12 @@
             this.contextMenuUpdateGames.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuUpdateAllGames});
             this.contextMenuUpdateGames.Name = "mnuUpdateGames";
-            this.contextMenuUpdateGames.Size = new System.Drawing.Size(154, 26);
+            this.contextMenuUpdateGames.Size = new System.Drawing.Size(145, 26);
             // 
             // mnuUpdateAllGames
             // 
             this.mnuUpdateAllGames.Name = "mnuUpdateAllGames";
-            this.mnuUpdateAllGames.Size = new System.Drawing.Size(153, 22);
+            this.mnuUpdateAllGames.Size = new System.Drawing.Size(144, 22);
             this.mnuUpdateAllGames.Text = "Load all games";
             this.mnuUpdateAllGames.Click += new System.EventHandler(this.mnuUpdateAllGames_Click);
             // 
@@ -458,17 +461,51 @@
             this.btnAbout.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAbout.Location = new System.Drawing.Point(12, 258);
             this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(91, 54);
+            this.btnAbout.Size = new System.Drawing.Size(50, 54);
             this.btnAbout.TabIndex = 22;
             this.btnAbout.Text = "About";
             this.btnAbout.UseVisualStyleBackColor = true;
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(247, 258);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(112, 17);
+            this.checkBox1.TabIndex = 23;
+            this.checkBox1.Text = "Record with VLC?";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckChanged);
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.Location = new System.Drawing.Point(247, 278);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(100, 34);
+            this.checkBox2.TabIndex = 24;
+            this.checkBox2.Text = "Poll stream until it\'s online";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckChanged);
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.Location = new System.Drawing.Point(361, 258);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(104, 53);
+            this.checkBox3.TabIndex = 25;
+            this.checkBox3.Text = "Authenticate Twitch.tv";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckChanged);
             // 
             // FrmStreams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 340);
+            this.Controls.Add(this.checkBox3);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.groupGames);
             this.Controls.Add(this.btnOpenBrowser);
@@ -537,6 +574,9 @@
         private System.Windows.Forms.ToolStripMenuItem mnuUpdateAllGames;
         private System.Windows.Forms.Button btnChangeGame;
         private System.Windows.Forms.Button btnAbout;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 

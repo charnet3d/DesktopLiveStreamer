@@ -1,9 +1,17 @@
 Desktop Live Streamer
 ===================
 
-An easy to use application that facilitates watching gaming related streams on Windows, right from your desktop.
+An easy to use application that facilitates watching and recording gaming related streams on Windows, right from your desktop.
+For recording it is possible to schedule it as in leave it trying to open the stream until the stream is online.
+If to view a channel you have to be subscribed and authenticated you can choose the Authenticate Twitch.tv option.
+You will be presented with a prompt asking you a token.Also your browser will launch sending you to twitch.tv to authenticate
+livestreamer for access in your account.after you have you will be redirected to a livestreamer page.There you will be given 
+aforementioned token which you will copy and paste to the prompt.Click OK and proceed.
 
-Current release: **0.9.4 Beta** (2013-12-21)
+*Work in Progress*
+
+I tried to implement this prior to a live streaming i wanted to record since I would be preoccupied with obligations 
+at the time it went online.Unfortunately I was a bit late so the least I can do is publish this for others to use.
 
 Requirements:
 -------------
@@ -16,40 +24,7 @@ Download:
 
 * Latest release:
 
-0.9.4 Beta
-http://www.mediafire.com/download/9e2jn2nvazo7r4h/DesktopLiveStreamer-0.9.4-Beta-Win32-Setup.rar
+Coming Soon
 
 
-* Older versions:
-
-0.9.3 Beta
-http://www.mediafire.com/download/k8g43dicei20e2l/DesktopLiveStreamer-0.9.3-Beta-Win32-Setup.rar
-
-0.9.2 Beta
-http://www.mediafire.com/file/uw3u2meqs0q9lv5/DesktopLiveStreamer-0.9.2-Beta-Win32-Setup.rar
-
-0.9.1 Beta
-http://www.mediafire.com/file/8kqfqht3cu6mdk9/DesktopLiveStreamer-0.9.1-Beta-Win32-Setup.rar
-
-0.9 Beta
-http://www.mediafire.com/file/q74s99vv2is3csx/DesktopLiveStreamer-0.9-Beta-Win32-Setup.rar
-
-0.8.2 Beta
-http://www.mediafire.com/file/kvys9vk56px5u18/Desktop_Live_Streamer_0.8.2_Beta_Installer.rar
-
-0.8 Beta
-http://www.mediafire.com/file/reaceci7px7rzty/Desktop_Live_Streamer_0.8_Beta_Installer.rar
-
-
-Installing:
------------
-
-1. Download installer from downloads and run it
-2. Enjoy :)
-
-
-Bug and Error reporting
------------------------
-
-If you ever find a bug or an unexpected behavior please submit a new issue at this page:
-https://github.com/charnet3d/DesktopLiveStreamer/issues
+Special thanks to Charaf Errachidi for the project!
