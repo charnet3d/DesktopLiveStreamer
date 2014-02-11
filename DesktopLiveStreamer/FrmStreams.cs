@@ -13,10 +13,13 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Security;
 using Microsoft.Win32;
+using System.Web.Script.Serialization;
+using HtmlAgilityPack;
 
 
 namespace DesktopLiveStreamer
 {
+    
     public partial class FrmStreams : Form
     {
         String qualities = "";
@@ -36,6 +39,10 @@ namespace DesktopLiveStreamer
         private Boolean loadAllGames;
         private Boolean currentGameChanged;
 
+        private bool record;
+        private bool poll;
+        private bool authenticateTwitch;
+
         Process qualityCheckProcess;
         Process liveStreamerProcess;
         Process VLCStreamProcess;
@@ -46,6 +53,9 @@ namespace DesktopLiveStreamer
 
         public FrmStreams()
         {
+            record = false;
+            poll = false;
+            authenticateTwitch = false;
             InitializeComponent();
         }
 
@@ -1320,7 +1330,32 @@ namespace DesktopLiveStreamer
                     url = listFavoriteStreams[index].StreamUrl;
                     quality = listFavoriteStreams[index].Quality;
                 }
-                    
+
+                if(poll)
+                {
+                    bool online = false;
+                    while(!online)
+                    {
+                        HttpWebRequest WebReq =
+                            (HttpWebRequest)
+                                WebRequest.Create( "https://api.twitch.tv/kraken/streams" +
+                                                   url.Substring( url.LastIndexOf( '/' ) ) );
+                        WebReq.Accept = "application/vnd.twitchtv.v2+json";
+                        WebReq.Method = "GET";
+                        HttpWebResponse WebResp = (HttpWebResponse)WebReq.GetResponse();
+                        using(var reader = new StreamReader( WebResp.GetResponseStream() ))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            RootObject myobj = (RootObject)js.Deserialize( objText,
+                                                                           typeof(RootObject) );
+                            if(myobj.stream != null)
+                            {
+                                online = true;
+                            }
+                        }
+                    }
+                }
 
                 if (statusStrip1.InvokeRequired)
                     statusStrip1.Invoke(new MethodInvoker(delegate
@@ -1331,8 +1366,55 @@ namespace DesktopLiveStreamer
                         progressBar.Visible = true;
                     }));
 
-                startInfo.Arguments = url + " " + quality + " --player=\"" + XMLPersist.VLCExecutable + "\""
-                            + " --rtmpdump \"Livestreamer\\rtmpdump\\rtmpdump.exe\"";
+                string authenticationArguments = " ";
+                if(authenticateTwitch)
+                {
+                    /*HttpWebRequest WebReq =
+                            (HttpWebRequest)
+                                WebRequest.Create("https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id=j0y5wmznssesfm3i5y1s32m9il45i9r& redirect_uri=https://github.com/NPatch/DesktopLiveStreamer& scope=user_subscriptions");
+                    WebReq.Accept = "application/vnd.twitchtv.v2+json";
+                    WebReq.Method = "GET";
+                    HttpWebResponse WebResp = (HttpWebResponse)WebReq.GetResponse();
+                    System.IO.Stream receiveStream = WebResp.GetResponseStream();
+                    Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
+                    StreamReader readStream = new StreamReader(receiveStream, encode);
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                    string html = readStream.ReadToEnd();
+                    doc.LoadHtml(html);
+                    string token = "";
+                    foreach(HtmlAgilityPack.HtmlNode csrfToken in doc.DocumentNode.ChildNodes["html"].ChildNodes["head"].Descendants("meta"))
+                    {
+                        if(csrfToken.GetAttributeValue( "name" ,"null") == "csrf-token")
+                        {
+                            token = csrfToken.GetAttributeValue("content", "null");
+                        }
+                    }
+                    WebResp.Close();
+                    readStream.Close();
+                    //authenticationArguments = " --twitch-oauth-token "+token+" ";*/
+                    authenticationArguments = " --twitch-oauth-authenticate ";
+                    startInfo.Arguments = authenticationArguments;
+                    liveStreamerProcess = Process.Start(startInfo);
+                    while (!liveStreamerProcess.HasExited)
+                    {
+
+                    }
+                    string authToken = Prompt.Show("Please paste here the token that will be given to you after authorizing Livestreamer in your Twitch account:", "Twitch.tv Authorization");
+                    authenticationArguments = " --twitch-oauth-token " + authToken + " ";
+                }
+                
+                if(record)
+                {
+                    string desktopPath = Environment.GetFolderPath( Environment.SpecialFolder.DesktopDirectory );
+                    startInfo.Arguments = authenticationArguments + url + " " + quality + " --player=\"" + XMLPersist.VLCExecutable + " --sout file/ts:\"" + desktopPath + "\\stream.mp4\"\""
+                            + " --rtmpdump \"Livestreamer\\rtmpdump\\rtmpdump.exe\" ";
+                }
+                else
+                {
+                    startInfo.Arguments = authenticationArguments + url + " " + quality + " --player=\"" + XMLPersist.VLCExecutable + " \""
+                            + " --rtmpdump \"Livestreamer\\rtmpdump\\rtmpdump.exe\" ";
+                }
+                
                 liveStreamerProcess = Process.Start(startInfo);
 
                 //String streamerOutput = "";
@@ -1599,6 +1681,42 @@ namespace DesktopLiveStreamer
                                 "permissions on the directory of the application.\n" +
                                 "Desktop Live Streamer may require administrative rights on some systems.", "Write permission required", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+
+        private void checkBox1_CheckChanged(object sender, EventArgs e)
+        {
+            if (this.checkBox1.Checked)
+            {
+                record = true;
+            }
+            else
+            {
+                record = false;
+            }
+        }
+
+        private void checkBox2_CheckChanged(object sender, EventArgs e)
+        {
+            if (this.checkBox2.Checked)
+            {
+                poll = true;
+            }
+            else
+            {
+                poll = false;
+            }
+        }
+
+        private void checkBox3_CheckChanged(object sender, EventArgs e)
+        {
+            if (this.checkBox3.Checked)
+            {
+                authenticateTwitch = true;
+            }
+            else
+            {
+                authenticateTwitch = false;
             }
         }
     }

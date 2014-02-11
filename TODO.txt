@@ -1,18 +1,5 @@
-+ a list of games to choose from, and a parameter of the current game chosen that gets saved in the xml file.
-+ Icon
-+ AboutBox (with credits for Livestreamer team)
-+ put on GitHub
-+ a link opening the livestream in the browser to support the streamers
-+ further testing of a bug where a stream doesn't launch after clicking on play (must be some bug with livestreamer)
-
-+ fix an exception that occurs when you already have a stream list loaded, you change the current game and click OK, the stream list starts loading but you click play, normally play button should be disabled in this case
-
-+ if a quality has been chosen, and we change the stream we check if the previous prefered quality is available so we activate it by default.
-
-- fix an unexpected behavior for when VLC executable is set manually at the startup of the application
-
-- Include stream name
-
-- Ability to subscribe/follow a channel in twitch
-
 - put a condition on Checking of online status, to bypass any non-twitch streams. Possible improvement would be to try to implement an online check for each of the supported streaming services.
+	PROGRESS:implemented own polling for when the stream is online to initiate VLC. my have to check if original author's code is more suited in order
+	to use that and remove mine.
+	
+- check for empty string or cancel button in authentication token prompt
