@@ -760,16 +760,19 @@ namespace DesktopLiveStreamer
                         responseString = reader.ReadToEnd();
                     }
 
+                    Debug.Print(responseString);
                     JObject obj = JObject.Parse(responseString);
 
                     JArray twitchStreams = (JArray)obj["streams"];
 
                     for (int i = 0; i < twitchStreams.Count; i++)
                     {
-                        listLiveStreams.add(new Stream((String)twitchStreams[i]["channel"]["status"],
+                        Stream newStream = new Stream((String)twitchStreams[i]["channel"]["status"],
                                                         (String)twitchStreams[i]["channel"]["url"],
                                                         long.Parse(twitchStreams[i]["viewers"].ToString()), "Twitch",
-                                                        (String)twitchStreams[i]["channel"]["name"]));
+                                                        (String)twitchStreams[i]["channel"]["name"]);
+                        newStream.displayName = twitchStreams[i]["channel"]["display_name"].ToString();
+                        listLiveStreams.add(newStream);
                     }
                 }
 
@@ -828,8 +831,8 @@ namespace DesktopLiveStreamer
                             img = (listLiveStreams[i].Host.Equals("Twitch") ?
                                     DesktopLiveStreamer.Properties.Resources.twitch :
                                     DesktopLiveStreamer.Properties.Resources.own3d);
-                            imgCmbLiveStreams.Items.Add(new DropDownItem(listLiveStreams[i].Viewers.ToString() +
-                                                                    " - " + listLiveStreams[i].Caption, img));
+                            imgCmbLiveStreams.Items.Add(new DropDownItem(
+                                listLiveStreams[i].displayName + "(" + String.Format("{0:#,##0}", listLiveStreams[i].Viewers) + ") - " + listLiveStreams[i].Caption, img));
                         }
                         if (imgCmbLiveStreams.Items.Count > 0)
                             imgCmbLiveStreams.SelectedIndex = 0;
