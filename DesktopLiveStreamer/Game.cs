@@ -8,7 +8,7 @@ namespace DesktopLiveStreamer
     class Game
     {
         // A singleton instance so we can indicate a selection of all games, rather than a specific game.
-        static public Game AllGames = new Game(null, null, null, null);
+        static public Game AllGames = new Game("[All Games]", null, null, null);
 
         public String Caption { get; set; }
         public String TwitchGameID { get; set; }
@@ -59,7 +59,7 @@ namespace DesktopLiveStreamer
         public override String ToString()
         {
             if (this == Game.AllGames)
-                return "[All Games]";
+                return Caption;
             // Silly kludge to add localized number formatting.
             if(Viewers != "")
                 return Int32.Parse(Viewers).ToString("n0") + " - " + Caption;
