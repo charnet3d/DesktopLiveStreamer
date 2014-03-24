@@ -7,6 +7,9 @@ namespace DesktopLiveStreamer
 {
     class Game
     {
+        // A singleton instance so we can indicate a selection of all games, rather than a specific game.
+        static public Game AllGames = new Game(null, null, null, null);
+
         public String Caption { get; set; }
         public String TwitchGameID { get; set; }
         public String Own3DGameID { get; set; }
@@ -30,6 +33,10 @@ namespace DesktopLiveStreamer
 
         public int compareTo(Game s, GameComparer.ComparisonType comparisonMethod)
         {
+            if (this == Game.AllGames)
+                return -1;
+            else if(s == Game.AllGames)
+                return 1;
             switch (comparisonMethod)
             {
                 case GameComparer.ComparisonType.Caption:
@@ -51,7 +58,12 @@ namespace DesktopLiveStreamer
 
         public override String ToString()
         {
-            return Viewers + " - " + Caption;
+            if (this == Game.AllGames)
+                return "[All Games]";
+            // Silly kludge to add localized number formatting.
+            if(Viewers != "")
+                return Int32.Parse(Viewers).ToString("n0") + " - " + Caption;
+            return Caption;
         }
 
 
@@ -78,13 +90,11 @@ namespace DesktopLiveStreamer
                 Game s1;
                 Game s2;
 
-                if (x is Game)
+                if (x is Game && y is Game)
+                {
                     s1 = (Game)x;
-                else
-                    throw new ArgumentException("Object is not of type Stream");
-
-                if (y is Game)
                     s2 = (Game)y;
+                }
                 else
                     throw new ArgumentException("Object is not of type Stream");
 

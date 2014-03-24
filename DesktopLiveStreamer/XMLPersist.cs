@@ -138,6 +138,8 @@ namespace DesktopLiveStreamer
 
         public static void loadGameListConfig(ListGames list)
         {
+            list.add(Game.AllGames);
+
             XmlTextReader xr = null;
             int attributs_lus;
             Game tmpGame = null;
@@ -221,6 +223,9 @@ namespace DesktopLiveStreamer
                 for (int i = 0; i < list.getSize(); i++)
                 {
                     tmpGame = list[i];
+
+                    if (tmpGame == Game.AllGames)
+                        continue;
 
                     xw.WriteStartElement("Game");
                     xw.WriteElementString("Caption", tmpGame.Caption);

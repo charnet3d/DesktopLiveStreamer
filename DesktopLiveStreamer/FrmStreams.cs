@@ -412,15 +412,14 @@ namespace DesktopLiveStreamer
             Image img;
             for (int i = 0; i < listGames.getSize(); i++)
             {
-                if (listGames[i].Own3DGameID == "")
+                if (listGames[i].Own3DGameID == "" || listGames[i] == Game.AllGames)
                     img = DesktopLiveStreamer.Properties.Resources.twitch;
                 else if (listGames[i].TwitchGameID == "")
                     img = DesktopLiveStreamer.Properties.Resources.own3d;
                 else
                     img = DesktopLiveStreamer.Properties.Resources.all_hosts;
 
-                imgCmbGames.Items.Add(new DropDownItem(listGames[i].Viewers +
-                    ((listGames[i].Viewers != "") ? " - " : "") + listGames[i].Caption, img));
+                imgCmbGames.Items.Add(new DropDownItem(listGames[i].ToString(), img));
             }
             if (XMLPersist.DefaultGame != "")
                 imgCmbGames.SelectedIndex = listGames.find(XMLPersist.DefaultGame);
@@ -515,6 +514,7 @@ namespace DesktopLiveStreamer
 
                 listGames.clear();
 
+                listGames.add(Game.AllGames);
                 for (int i = 0; i < twitchGames.Count; i++)
                 {
                     listGames.add(new Game((String)twitchGames[i]["game"]["name"],
@@ -588,15 +588,14 @@ namespace DesktopLiveStreamer
                         Image img;
                         for (int i = 0; i < listGames.getSize(); i++)
                         {
-                            if (listGames[i].Own3DGameID == "")
+                            if (listGames[i].Own3DGameID == "" || listGames[i] == Game.AllGames)
                                 img = DesktopLiveStreamer.Properties.Resources.twitch;
                             else if (listGames[i].TwitchGameID == "")
                                 img = DesktopLiveStreamer.Properties.Resources.own3d;
                             else
                                 img = DesktopLiveStreamer.Properties.Resources.all_hosts;
 
-                            imgCmbGames.Items.Add(new DropDownItem(listGames[i].Viewers +
-                                ((listGames[i].Viewers != "")?" - ":"") + listGames[i].Caption, img));
+                            imgCmbGames.Items.Add(new DropDownItem(listGames[i].ToString(), img));
                         }
                         if (imgCmbGames.Items.Count > 0)
                             imgCmbGames.SelectedIndex = 0;
@@ -653,7 +652,7 @@ namespace DesktopLiveStreamer
                             Image img;
                             for (int i = 0; i < listGames.getSize(); i++)
                             {
-                                if (listGames[i].Own3DGameID == "")
+                                if (listGames[i].Own3DGameID == "" || listGames[i] == Game.AllGames)
                                     img = DesktopLiveStreamer.Properties.Resources.twitch;
                                 else if (listGames[i].TwitchGameID == "")
                                     img = DesktopLiveStreamer.Properties.Resources.own3d;
@@ -747,33 +746,32 @@ namespace DesktopLiveStreamer
 
                 int idx = listGames.find(XMLPersist.DefaultGame);
 
-                if (listGames[idx].TwitchGameID != "")
+                url = "https://api.twitch.tv/kraken/streams";
+                if (listGames[idx] != Game.AllGames)
+                    url += "?game=" + listGames[idx].TwitchGameID;
+                request = WebRequest.Create(url);
+                ws = request.GetResponse();
+
+                responseString = "";
+                using (System.IO.Stream stream = ws.GetResponseStream())
                 {
-                    url = "https://api.twitch.tv/kraken/streams?game=" + listGames[idx].TwitchGameID;
-                    request = WebRequest.Create(url);
-                    ws = request.GetResponse();
+                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                    responseString = reader.ReadToEnd();
+                }
 
-                    responseString = "";
-                    using (System.IO.Stream stream = ws.GetResponseStream())
-                    {
-                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                        responseString = reader.ReadToEnd();
-                    }
+                Debug.Print(responseString);
+                JObject obj = JObject.Parse(responseString);
 
-                    Debug.Print(responseString);
-                    JObject obj = JObject.Parse(responseString);
+                JArray twitchStreams = (JArray)obj["streams"];
 
-                    JArray twitchStreams = (JArray)obj["streams"];
-
-                    for (int i = 0; i < twitchStreams.Count; i++)
-                    {
-                        Stream newStream = new Stream((String)twitchStreams[i]["channel"]["status"],
-                                                        (String)twitchStreams[i]["channel"]["url"],
-                                                        long.Parse(twitchStreams[i]["viewers"].ToString()), "Twitch",
-                                                        (String)twitchStreams[i]["channel"]["name"]);
-                        newStream.displayName = twitchStreams[i]["channel"]["display_name"].ToString();
-                        listLiveStreams.add(newStream);
-                    }
+                for (int i = 0; i < twitchStreams.Count; i++)
+                {
+                    Stream newStream = new Stream((String)twitchStreams[i]["channel"]["status"],
+                                                    (String)twitchStreams[i]["channel"]["url"],
+                                                    long.Parse(twitchStreams[i]["viewers"].ToString()), "Twitch",
+                                                    (String)twitchStreams[i]["channel"]["name"]);
+                    newStream.DisplayName = twitchStreams[i]["channel"]["display_name"].ToString();
+                    listLiveStreams.add(newStream);
                 }
 
                 // Loading stream list from Own3D
@@ -831,8 +829,7 @@ namespace DesktopLiveStreamer
                             img = (listLiveStreams[i].Host.Equals("Twitch") ?
                                     DesktopLiveStreamer.Properties.Resources.twitch :
                                     DesktopLiveStreamer.Properties.Resources.own3d);
-                            imgCmbLiveStreams.Items.Add(new DropDownItem(
-                                listLiveStreams[i].displayName + "(" + String.Format("{0:#,##0}", listLiveStreams[i].Viewers) + ") - " + listLiveStreams[i].Caption, img));
+                            imgCmbLiveStreams.Items.Add(new DropDownItem(listLiveStreams[i].ToString(), img));
                         }
                         if (imgCmbLiveStreams.Items.Count > 0)
                             imgCmbLiveStreams.SelectedIndex = 0;
