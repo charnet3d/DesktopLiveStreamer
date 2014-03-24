@@ -13,6 +13,8 @@ namespace DesktopLiveStreamer
         public long Viewers { get; set; }
         public String Host { get; set; }
         public String Channel { get; set; }
+        public String DisplayName { get; set; }
+        public string Game { get; set; }
 
         public Stream()
         {
@@ -53,7 +55,7 @@ namespace DesktopLiveStreamer
 
         public override String ToString()
         {
-            return Viewers + " - " + Caption;
+            return DisplayName + "(" + Viewers.ToString("n0") + ") - " + Caption;
         }
 
 
